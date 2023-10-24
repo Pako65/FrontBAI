@@ -1,7 +1,9 @@
 <template>
     <h1>C'est le test de nuxt</h1>
 
-    <RouterLink to="/index"></RouterLink>
+    <RouterLink to="/index">
+        <button>ICI</button>
+    </RouterLink>
 </template>
 
 <script>

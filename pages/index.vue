@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>Hello World</h1>
-        <RouterLink to="/test">
+        <RouterLink to="/test" class="test">
             Go vers test
         </RouterLink>
     </div>
@@ -10,3 +10,7 @@
 <script>
 
 </script>
+
+<style>
+
+</style>
