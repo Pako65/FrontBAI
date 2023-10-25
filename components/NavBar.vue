@@ -5,7 +5,7 @@
     <div class="logo">
       <img alt="Logo Boite a Idees" src="@/assets/images/logo.png" class="logo__img"/>
       <div class="logo__title">
-        <button>
+        <button class="logo__button">
           <p>Boîte à Idées</p>
         </button>
         <h2 class="logo__title-h2">HUMAN</h2>
