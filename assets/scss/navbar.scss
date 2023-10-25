@@ -1,0 +1,124 @@
+.navbar {
+  display: flex;
+  // width: 1728px;
+  padding-top: 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  margin-left: 264px;
+
+  &__img {
+    margin-right: 10px;
+  }
+  &__button {
+    width: 295px;
+    height: 52px;
+    font-family: "gotham";
+    font-weight: 325;
+    font-size: 40px;
+    line-height: 40px;
+    background-color: #bf8c4f;
+    border: none;
+    transform: rotate(-2deg);
+  }
+}
+
+.button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  gap: 10px;
+  border-radius: 6px;
+
+  &__add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 295px;
+    height: 52px;
+    background-color: #bf8c4f;
+    border-radius: 6px;
+    border: none;
+    margin-top: 95.59px;
+    margin-right: 264px;
+  }
+}
+
+// .navbar {
+//     position: relative;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     background-color: rgba(191, 140, 79, 0.1);
+// }
+
+// .logo {
+//     display: flex;
+//     align-items: center;
+//     margin-top: 30px;
+//     margin-left: 264px;
+
+//     &__img {
+//         margin-right: 10px;
+//     }
+
+//     &__title {
+//         display: flex;
+//         flex-direction: column;
+//         margin-left: 10px;
+//         padding: 11px 35px;
+
+//         &-h2 {
+//             margin: 11.35px;
+//             font-weight: 325;
+//             font-size: 40px;
+//             line-height: 40px;
+//         }
+//     }
+//     &__wave {
+//         position: absolute;
+//         top: 100%;
+//         left: 0;
+//         width: 100%;
+//         z-index: -1;
+//     }
+// }
+
+// .button {
+//     position: relative;
+//     top: 0;
+//     right: 0;
+//     display: flex;
+//     align-items: center;
+//     padding: 6px 12px;
+//     gap: 10px;
+//     border-radius: 6px;
+
+//     &__add {
+//         justify-content: center;
+//         width: 295px;
+//         height: 52px;
+//         background-color: #bf8c4f;
+//         border-radius: 6px;
+//         border: none;
+//         margin-top: 95.59px;
+//         margin-right: 264px;
+//     }
+
+//     &__p {
+//         font-weight: 325;
+//         font-size: 28px;
+//         line-height: 40px;
+//         color: #fff;
+//         padding-right: 10px;
+//     }
+// }
