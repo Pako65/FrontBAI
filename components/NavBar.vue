@@ -10,7 +10,7 @@
         <h2 class="navigation__title-h2">HUMAN</h2>
         <!-- <img alt="Vague" src="@/assets/images/separation-v2.svg" class="navigation_wave" /> -->
       </div>
-      <RouterLink to="/idea/add">
+      <RouterLink to="/idea/add" class="navigation__button">
         <button class="navigation__add">
           <p class="navigation__p">Ajouter une idée</p>
           <img alt="icone-ajouter" src="@/assets/images/icon-ajouter.png" />
