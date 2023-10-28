@@ -1,92 +1,146 @@
+@import '@/assets/scss/main.scss';
+
 .navbar {
   display: flex;
-  // width: 1728px;
+  width: 1728px;
   padding-top: 30px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: chartreuse;
 }
 
 .navigation {
   display: flex;
-  align-items: center;
-  margin-top: 30px;
-  margin-left: 264px;
+  width: 1200px;
+  justify-content: space-between;
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
 
   &__img {
-    margin-right: 10px;
+    width: 150px;
+    height: 183.18px;
   }
-  &__bai {
-    width: 295px;
-    height: 52px;
-    font-family: "gotham";
-    font-weight: 325;
-    font-size: 40px;
-    line-height: 40px;
-    background-color: #bf8c4f;
-    border: none;
-    transform: rotate(-2deg);
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   &__button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    padding: 6px 12px;
-    gap: 10px;
-    border-radius: 6px;
+    transform: rotate(-2deg);
+    padding: 2px 10px;
+    border: none;
+    background: $orange;
+  }
+
+  &__bai {
+    transform: rotate(1deg);
+    color: #fff;
+    //trouver une plus belle police
+    // font-family: "Gotham";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 325;
+    line-height: 40px;
+  }
+
+  &__human {
+    color: black;
+    font-family: 'Open Sans';
+    font-size: 44px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 44px;
+    margin-left: 15px;
   }
 
   &__add {
     display: flex;
+    padding: 6px 12px;
     justify-content: center;
     align-items: center;
-    width: 295px;
-    height: 52px;
-    background-color: #bf8c4f;
+    gap: 10px;
     border-radius: 6px;
+    background: $orange;
     border: none;
-    margin-top: 95.59px;
-    margin-right: 264px;
+
+  }
+
+  &__idea {
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
   }
 
   &__p {
-    font-weight: 325;
-    font-size: 28px;
-    line-height: 40px;
     color: #fff;
-    padding-right: 10px;
+    // font-family: "Gotham";
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 325;
+    line-height: 40px;
+  }
+
+  &__logoAdd {
+    width: 30px;
+    height: 30px;
   }
 }
-// ajouter les couleurs en couleurs global.
 
-
-
-.titreBody {
+.listIdea {
   display: flex;
-  justify-content: space-between;
+  width: 1728px;
+  padding-top: 30px;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin: 100px 304px 30px 300px;
 
-  &__titre {
+  &__head {
     display: flex;
-    align-items: center;
-    font-size: 28px;
+    width: 1200px;
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin-top: 32px;
+    color: #000;
     // font-family: ;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
   }
 
   &__button {
     display: flex;
-    justify-content: space-between;
+    padding: 6px 12px;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    background: none;
-    border-color: #bf8c4f;
+    gap: 12px;
     border-radius: 6px;
-    // font-family: ;
-    font-size: 17px;
+    border: 2px solid $orange;
   }
+
+  &__p {
+    color: #404040;
+    font-family: 'Poppins';
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.list {
+  
 }

@@ -15,5 +15,10 @@
     "sass": "^1.69.4",
     "vue": "^3.3.6",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5"
   }
 }
