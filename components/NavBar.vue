@@ -24,28 +24,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-export default {
-  data() {
-    return {
-      idea: [],
-    };
-  },
-  mounted() {
-    this.fetchIdea();
-  },
-  methods: {
-    async fetchIdea() {
-      try {
-        const response = await axios.get('https://localhost:7182/api/getAll');
-        this.idea = response.data;
-        console.log(this.idea);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-  },
-}
 </script>
 
 <style scoped>
