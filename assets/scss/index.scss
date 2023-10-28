@@ -1,0 +1,49 @@
+@import '@/assets/scss/main.scss';
+
+.listIdea {
+    display: flex;
+    width: 1728px;
+    padding-top: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    &__head {
+      display: flex;
+      width: 1200px;
+      justify-content: space-between;
+    }
+  
+    &__title {
+      margin-top: 32px;
+      color: #000;
+      // font-family: ;
+      font-size: 28px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 24px;
+    }
+  
+    &__button {
+      display: flex;
+      padding: 6px 12px;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      border-radius: 6px;
+      border: 2px solid $orange;
+    }
+  
+    &__p {
+      color: #404040;
+      font-family: 'Poppins';
+      font-size: 22px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+  
+  .list {
+    color: black;
+  }
