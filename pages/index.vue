@@ -54,7 +54,7 @@ export default {
     },
     methods: {
         async fetchIdea() {
-            const response = await axios.get('https://localhost:7182/api/getAll');
+            const response = await axios.get('https://localhost:7182/api/GetAll');
             this.idea = response.data;
             console.log(this.idea);
         },

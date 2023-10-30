@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       category: [],
-      selectedCategory: 1,
+      selectedCategory: null,
       title: "",
       contenu: "",
     }
@@ -48,7 +48,7 @@ export default {
     createIdea() {
       const ideaData = {
         title: this.title,
-        description: this.description,
+        description: this.contenu,
         fkUsersId: 1, 
         ideaGetCategory: [
           {
@@ -56,14 +56,9 @@ export default {
           },
         ],
       };
-    // sendIdea() {
-    //   const newIdea = {
-    //     title: this.title,
-    //     id: this.selectedCategory,
-    //     description: this.contenu
-    //   };
 
-      axios.post("https://localhost:7182/api/postIdea", ideaData)
+
+      axios.post("https://localhost:7182/api/PostIdea", ideaData)
       .then((response) => {
         console.log(response.data)
 
