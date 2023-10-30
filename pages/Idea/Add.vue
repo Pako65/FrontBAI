@@ -1,8 +1,96 @@
 <template>
-  <div>
-    <h1>ADD IDEA</h1>
+  <div class="add">
+    <h1>Soumettre une idée</h1>
+
+    <div class="add__title">
+      <p>Titre</p>
+      <input type="text" placeholder="EX: Mettre une piscine" v-model="title">
+    </div>
+
+    <div class="add__category">
+      <p>Catégorie</p>
+      <select v-model="selectedCategory">
+        <option v-for="categorie in category" :value="categorie.id" :key="categorie.id">
+          {{ categorie.name }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <p>Contenu</p>
+      <input type="text" v-model="contenu">
+    </div>
+
+    <button>
+      <p>Envoyez</p>
+      <img src="@/assets/images/icon-envoier.png" alt="bouton envoyer" @click="createIdea()">
+    </button>
   </div>
 </template>
 
+
+<script>
+import axios from 'axios';
+import Swal from 'sweetalert2'
+export default {
+  data() {
+    return {
+      category: [],
+      selectedCategory: 1,
+      title: "",
+      contenu: "",
+    }
+  },
+  mounted() {
+    this.fetchCategorie()
+  },
+  methods: {
+    createIdea() {
+      const ideaData = {
+        title: this.title,
+        description: this.description,
+        fkUsersId: 1, 
+        ideaGetCategory: [
+          {
+            categoryId: parseInt(this.selectedCategory),
+          },
+        ],
+      };
+    // sendIdea() {
+    //   const newIdea = {
+    //     title: this.title,
+    //     id: this.selectedCategory,
+    //     description: this.contenu
+    //   };
+
+      axios.post("https://localhost:7182/api/postIdea", ideaData)
+      .then((response) => {
+        console.log(response.data)
+
+        Swal.fire({
+            title: "Bravo !",
+            text: "Votre idée a bien était envoyé",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+
+        Swal.fire({
+            title: "Erreur !",
+            text: "Une erreur est survenu pendant l'envoi de votre idée.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+      })
+    },
+    async fetchCategorie() {
+      const response = await axios.get('https://localhost:7182/api/GetAllComment');
+      this.category = response.data;
+    }
+  }
+}
+</script>
 
 
