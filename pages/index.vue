@@ -15,7 +15,7 @@
                             <RouterLink to="/idea/modify">
                                 <img src="@/assets/images/icon-modifier.png" alt="Modifier">
                             </RouterLink>
-                            <img src="@/assets/images/icon-delete.png" alt="Supprimer">
+                            <img src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.id)">
                             <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
                             <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
                         </div>
@@ -32,17 +32,13 @@
                 </ul>
             </div>
         </section>
-
-        <h1>Hello World</h1>
-        <RouterLink to="/test" class="test">
-            Go vers test
-        </RouterLink>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 export default {
     data() {
         return {
@@ -53,6 +49,29 @@ export default {
         this.fetchIdea();
     },
     methods: {
+        deleteIdea(id) {
+            Swal.fire({
+                title: "Vous êtes sûr ?",
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Oui je supprime !",
+                cancelButtonText: "Annulez !",
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`https://localhost:7182/api/${id}/DeleteIdeaById`).then(() => {
+                        Swal.fire("Supprimé !", "Votre idée à bien été supprimée.", "success").then(() => {
+                            location.reload();
+                        })
+                    }).catch((error) => {
+                        console.error("Une erreur est survenu lors de la suppression", error);
+                    });
+                } else if (result.dismiss === Swal.DissmissReason.cancel) {
+                    Swal.fire("Annulé.", "Votre idée est toujours disponible", "error");
+                }
+            })
+        },
         async fetchIdea() {
             const response = await axios.get('https://localhost:7182/api/GetAll');
             this.idea = response.data;
