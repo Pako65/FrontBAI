@@ -43,6 +43,7 @@ export default {
     data() {
         return {
             idea: [],
+            showButton: true,
         };
     },
     mounted() {

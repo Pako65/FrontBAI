@@ -11,9 +11,13 @@
         </div>
       </div>
       <RouterLink to="/idea/add" class="navigation__idea">
-        <button class="navigation__add">
+        <button class="navigation__add" v-if="showButton">
           <p class="navigation__p">Ajouter une idée</p>
           <img alt="navigation__logoAdd" src="@/assets/images/icon-ajouter.png" />
+        </button>
+        <button class="navigation__add" v-else>
+          <p class="navigation__p">Liste des idées</p>
+          <img src="@/assets/images/icon-liste.png" alt="Liste">
         </button>
       </RouterLink>
     </div>
@@ -24,6 +28,17 @@
 </template>
 
 <script>
+export default {
+  data() {
+    return {
+    }
+  },
+  computed: {
+    showButton() {
+      return this.$route.path === '/';
+    }
+  }
+}
 </script>
 
 <style scoped>

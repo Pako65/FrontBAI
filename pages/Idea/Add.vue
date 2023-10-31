@@ -39,6 +39,7 @@ export default {
       selectedCategory: 1,
       title: "",
       contenu: "",
+      showButton: false,
     }
   },
   mounted() {
