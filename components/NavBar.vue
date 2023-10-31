@@ -24,9 +24,6 @@
       </RouterLink>
     </div>
   </nav>
-  <RouterLink to="/">
-    <button>ICI</button>
-  </RouterLink>
 </template>
 
 <script>
