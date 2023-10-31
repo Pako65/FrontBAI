@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       category: [],
-      selectedCategory: null,
+      selectedCategory: 1,
       title: "",
       contenu: "",
     }

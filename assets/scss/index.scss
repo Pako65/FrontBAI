@@ -28,6 +28,11 @@
     &__li {
         display: flex;
     }
+    &__image {
+      &-delete {
+        cursor: pointer;
+      }
+    }
 }
 
 

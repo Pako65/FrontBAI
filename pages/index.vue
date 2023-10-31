@@ -15,7 +15,7 @@
                             <RouterLink to="/idea/modify">
                                 <img src="@/assets/images/icon-modifier.png" alt="Modifier">
                             </RouterLink>
-                            <img src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.id)">
+                            <img class="list__image-delete" src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.id)">
                             <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
                             <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
                         </div>
