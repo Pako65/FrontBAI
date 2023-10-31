@@ -15,10 +15,12 @@
           <p class="navigation__p">Ajouter une idée</p>
           <img alt="navigation__logoAdd" src="@/assets/images/icon-ajouter.png" />
         </button>
-        <button class="navigation__add" v-else>
-          <p class="navigation__p">Liste des idées</p>
-          <img src="@/assets/images/icon-liste.png" alt="Liste">
-        </button>
+        <RouterLink to="/" class="navigation__idea" v-else>
+          <button class="navigation__add">
+            <p class="navigation__p">Liste des biens</p>
+            <img alt="navigation__logoHome" src="@/assets/images/icon-liste.png" />
+          </button>
+        </RouterLink>
       </RouterLink>
     </div>
   </nav>
