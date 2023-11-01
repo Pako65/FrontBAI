@@ -13,6 +13,13 @@
       <div v-if="errorMsg">{{ errorMsg }}</div>
       <button type="submit">Sign In</button>
     </form>
+
+    <div>
+      <p>déjà un compte ?</p>
+      <RouterLink to="/register">
+        <button>login</button>
+      </RouterLink>
+    </div>
   </div>
 </template>
 

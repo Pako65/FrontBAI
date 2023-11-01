@@ -30,6 +30,10 @@
 
 <script setup lang="ts">
 
+definePageMeta({
+    middleware: ['not-auth']
+})
+
 const user = useSupabaseUser()
 
 </script>

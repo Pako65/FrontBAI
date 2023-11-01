@@ -9,10 +9,8 @@
     <div v-else>Not logged in</div>
 
 
-<!-- ESSAYER DE REDIRIGER TOUT LE TEMPS SUR REGISTER SI PAS CONNECTE -->
-<!-- JS ET TS PAS COMPATIBLE EVIDEMMENT TROUVE UN MOYEN POUR AVOIR LA DECO ET LES IDEES AFFICHE -->
 
-    <!-- <div>
+    <div>
         <section>
             <div class="list">
                 <h1 class="list__title">Liste des idées</h1>
@@ -23,12 +21,13 @@
             </div>
             <div class="list__idea">
                 <ul v-if="idea && idea.length > 0">
-                    <li v-for="ideas in idea" :key="idea.id">
+                    <li v-for="ideas in idea">
                         <div class="list__image">
                             <RouterLink to="/idea/modify">
                                 <img src="@/assets/images/icon-modifier.png" alt="Modifier">
                             </RouterLink>
-                            <img class="list__image-delete" src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.id)">
+                            <img class="list__image-delete" src="@/assets/images/icon-delete.png" alt="Supprimer"
+                                @click="deleteIdea(ideas.id)">
                             <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
                             <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
                         </div>
@@ -44,17 +43,26 @@
                 </ul>
             </div>
         </section>
-    </div> -->
+    </div>
 </template>
 
-<!-- <script>
+<script lang="ts">
 import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+
+
+
+//  ESSAYER DE REDIRIGER TOUT LE TEMPS SUR REGISTER SI PAS CONNECTE 
+//      JS ET TS PAS COMPATIBLE EVIDEMMENT TROUVE UN MOYEN POUR AVOIR LA DECO ET LES IDEES AFFICHE 
+//      pour l'instant l'auth fonctionne, mais cela demande une verif a chaque fois 
+//      alors que chez human pas besoin de verif, ni register techniquement, voir avec le prof 
+
+
 export default {
     data() {
         return {
-            idea: [],
+            idea: [] as { id: number; title: string; createdAt: string }[], // Ajoutez une annotation de type pour idea
             showButton: true,
         };
     },
@@ -62,7 +70,7 @@ export default {
         this.fetchIdea();
     },
     methods: {
-        deleteIdea(id) {
+        deleteIdea(id: number) {
             Swal.fire({
                 title: "Vous êtes sûr ?",
                 text: "Vous ne pourrez pas revenir en arrière !",
@@ -74,31 +82,35 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     axios.delete(`https://localhost:7182/api/${id}/DeleteIdeaById`).then(() => {
-                        Swal.fire("Supprimé !", "Votre idée à bien été supprimée.", "success").then(() => {
+                        Swal.fire("Supprimé !", "Votre idée a bien été supprimée.", "success").then(() => {
                             location.reload();
-                        })
+                        });
                     }).catch((error) => {
-                        console.error("Une erreur est survenu lors de la suppression", error);
+                        console.error("Une erreur est survenue lors de la suppression", error);
                     });
-                } else if (result.dismiss === Swal.DissmissReason.cancel) {
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire("Annulé.", "Votre idée est toujours disponible", "error");
                 }
-            })
+            });
         },
         async fetchIdea() {
-            const response = await axios.get('https://localhost:7182/api/GetAll');
-            this.idea = response.data;
-            console.log(this.idea);
+            try {
+                const response = await axios.get('https://localhost:7182/api/GetAll');
+                this.idea = response.data;
+                console.log(this.idea);
+            } catch (error) {
+                console.error("Une erreur est survenue lors de la récupération des idées", error);
+            }
         },
-        formatDate(createdAt) {
-            return moment(createdAt).format("DD/MM/YYYY")
+        formatDate(createdAt: string) {
+            return moment(createdAt).format("DD/MM/YYYY");
         }
     },
 }
-</script> -->
-
+</script>
 
 <script setup lang="ts">
+
 const user = useSupabaseUser();
 const router = useRouter();
 const client = useSupabaseClient();
@@ -109,8 +121,8 @@ async function logout() {
 
     router.push('/');
 }
-
 </script>
+
 <style scoped>
 @import '@/assets/scss/index.scss';
 </style>

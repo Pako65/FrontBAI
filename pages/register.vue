@@ -21,8 +21,14 @@
         <div v-if="successMsg">
             {{ successMsg }}
         </div>
-
+        
         <button type="submit">Sign Up</button>
+        <div>
+            <p>déjà un compte ?</p> 
+            <RouterLink to="/login">
+                <button>login</button>
+            </RouterLink>
+        </div>
     </form>
 </template>
 
