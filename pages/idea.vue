@@ -81,7 +81,7 @@ export default {
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`https://localhost:7182/api/${id}/DeleteIdeaById`).then(() => {
+                    axios.delete(`https://localhost:7182/Idea/${id}/DeleteIdeaById`).then(() => {
                         Swal.fire("Supprimé !", "Votre idée a bien été supprimée.", "success").then(() => {
                             location.reload();
                         });
@@ -95,7 +95,7 @@ export default {
         },
         async fetchIdea() {
             try {
-                const response = await axios.get('https://localhost:7182/api/GetAll');
+                const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
                 console.log(this.idea);
             } catch (error) {

@@ -59,7 +59,7 @@ export default {
       };
 
 
-      axios.post("https://localhost:7182/api/PostIdea", ideaData)
+      axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
       .then((response) => {
         console.log(response.data)
 
@@ -82,7 +82,7 @@ export default {
       })
     },
     async fetchCategorie() {
-      const response = await axios.get('https://localhost:7182/api/GetAllComment');
+      const response = await axios.get('https://localhost:7182/Category/GetAllComment');
       this.category = response.data;
     }
   }
