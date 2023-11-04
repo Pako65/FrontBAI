@@ -18,7 +18,7 @@
 
     <div>
       <p>Contenu</p>
-      <input type="text" v-model="contenu">
+      <textarea id="contenu" v-model="contenu" rows="4" cols="80" required></textarea>
     </div>
 
     <button>
@@ -50,7 +50,7 @@ export default {
       const ideaData = {
         title: this.title,
         description: this.contenu,
-        fkUsersId: 1, 
+        fkUsersId: 1,
         ideaGetCategory: [
           {
             categoryId: parseInt(this.selectedCategory),
@@ -60,26 +60,25 @@ export default {
 
 
       axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
-      .then((response) => {
-        console.log(response.data)
+        .then((response) => {
 
-        Swal.fire({
+          Swal.fire({
             title: "Bravo !",
             text: "Votre idée a bien était envoyé",
             icon: "success",
             confirmButtonText: "OK",
           });
-      })
-      .catch((error) => {
-        console.error(error);
+        })
+        .catch((error) => {
+          console.error(error);
 
-        Swal.fire({
+          Swal.fire({
             title: "Erreur !",
             text: "Une erreur est survenu pendant l'envoi de votre idée.",
             icon: "error",
             confirmButtonText: "OK",
           });
-      })
+        })
     },
     async fetchCategorie() {
       const response = await axios.get('https://localhost:7182/Category/GetAllComment');

@@ -1,23 +1,17 @@
 <template>
     <div>
-        <button v-if="user" @click="logout">logout</button>
-    </div>
-    <div v-if="user">
-        <p>Logged in as {{ user.email }}</p>
-        <p>user id: {{ user.id }}</p>
-    </div>
-    <div v-else>Not logged in</div>
-
-
-
-    <div>
         <section>
             <div class="list">
                 <h1 class="list__title">Liste des idées</h1>
-                <button class="list__button">
+                <button class="list__button" @click="showModal = true">
                     <p class="list__p">Trier</p>
                     <img src="@/assets/images/icon-trier.png" alt="bouton trier">
                 </button>
+                <Modal 
+                :show="showModal" 
+                @close="showModal = false"
+                @sort-ideas="sortIdeas"
+                ref="modalComponent" />
             </div>
             <div class="list__idea">
                 <ul v-if="idea && idea.length > 0">
@@ -27,50 +21,65 @@
                                 <img src="@/assets/images/icon-modifier.png" alt="Modifier">
                             </RouterLink>
                             <img class="list__image-delete" src="@/assets/images/icon-delete.png" alt="Supprimer"
-                                @click="deleteIdea(ideas.id)">
+                                @click="deleteIdea(ideas.ideaId)">
                             <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
                             <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
+                            <p class="list__date">{{ formatDate(ideas.createdAt) }}</p>
+                            <p class="list__tag">{{ ideas.categoryName }}</p>
+                            <RouterLink :to="'/idea/' + ideas.ideaId" class="list__detailed">
+                                <p class="list__content">{{ ideas.title }}</p>
+                            </RouterLink>
                         </div>
-                        <div>
-                            <ul>
-                                <li>
-                                    <p>{{ formatDate(ideas.createdAt) }}</p>
-                                </li>
-                            </ul>
-                        </div>
-                        <p>{{ ideas.title }}</p>
                     </li>
                 </ul>
             </div>
         </section>
     </div>
+    <div>
+        <button v-if="user" @click="logout">logout</button>
+    </div>
+    <div v-if="user">
+        <p>Logged in as {{ user.email }}</p>
+        <p>user id: {{ user.id }}</p>
+    </div>
+    <div v-else>Not logged in</div>
 </template>
 
 <script lang="ts">
+import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 
-
-
-//  ESSAYER DE REDIRIGER TOUT LE TEMPS SUR REGISTER SI PAS CONNECTE 
-//      JS ET TS PAS COMPATIBLE EVIDEMMENT TROUVE UN MOYEN POUR AVOIR LA DECO ET LES IDEES AFFICHE 
-//      pour l'instant l'auth fonctionne, mais cela demande une verif a chaque fois 
-//      alors que chez human pas besoin de verif, ni register techniquement, voir avec le prof 
-
-
 export default {
     data() {
         return {
-            idea: [] as { id: number; title: string; createdAt: string }[], // Ajoutez une annotation de type pour idea
+            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string }[], // Ajoutez une annotation de type pour idea
             showButton: true,
+            activeSortButton: null,
+            showModal: false,
         };
     },
     mounted() {
         this.fetchIdea();
     },
+    components: {
+        Modal,
+    },
     methods: {
-        deleteIdea(id: number) {
+        sortIdeas(sortType: any) {
+            if (sortType === 'A-Z-Title') {
+                this.idea.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortType === 'Z-A-Title') {
+                this.idea.sort((a, b) => b.title.localeCompare(a.title));
+            }
+
+            this.activeSortButton = sortType;
+        },
+        openModal() {
+            this.showModal = true;
+        },
+        deleteIdea(ideaId: number) {
             Swal.fire({
                 title: "Vous êtes sûr ?",
                 text: "Vous ne pourrez pas revenir en arrière !",
@@ -81,7 +90,7 @@ export default {
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`https://localhost:7182/Idea/${id}/DeleteIdeaById`).then(() => {
+                    axios.delete(`https://localhost:7182/Idea/${ideaId}/DeleteIdeaById`).then(() => {
                         Swal.fire("Supprimé !", "Votre idée a bien été supprimée.", "success").then(() => {
                             location.reload();
                         });
@@ -97,7 +106,6 @@ export default {
             try {
                 const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
-                console.log(this.idea);
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }
@@ -106,6 +114,12 @@ export default {
             return moment(createdAt).format("DD/MM/YYYY");
         }
     },
+    computed: {
+        activeSortButtonExists(): boolean {
+            return this.activeSortButton !== null;
+        },
+    },
+    
 }
 </script>
 
@@ -115,7 +129,8 @@ const user = useSupabaseUser();
 const router = useRouter();
 const client = useSupabaseClient();
 
-console.log(user.value);
+const route = useRoute()
+
 async function logout() {
     await client.auth.signOut();
 

@@ -1,0 +1,40 @@
+@import '@/assets/scss/main.scss';
+
+.detailedIdea {
+    display: flex;
+    width: 100%;
+    padding-top: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__head {
+        display: flex;
+        align-items: flex-end;
+        gap: 24px;
+        margin-bottom: 48px;
+        width: 1200px;
+    }
+
+    &__tag {
+        padding: 4px 16px;
+        background-color: $orange;
+        border-radius: 50px;
+        color: #fff;
+        font-family: 'Nunito';
+        font-size: 20px;
+    }
+    &__title {
+        font-family: 'Nunito';
+        font-size: 28px;
+        line-height: 24px;
+    }
+
+    &__content {
+        color: #000;
+        font-family: 'Nunito';
+        font-size: 20px;
+        line-height: 24px;
+        width: 1200px;
+    }
+}
