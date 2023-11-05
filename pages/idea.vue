@@ -34,6 +34,7 @@
                 </ul>
             </div>
         </section>
+
     </div>
     <div>
         <button v-if="user" @click="logout">logout</button>
@@ -46,6 +47,7 @@
 </template>
 
 <script lang="ts">
+
 import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 import moment from 'moment';
@@ -58,13 +60,18 @@ export default {
             showButton: true,
             activeSortButton: null,
             showModal: false,
+            ownerEmail: '',
         };
     },
+    
     mounted() {
         this.fetchIdea();
     },
     components: {
         Modal,
+    },
+    props: {
+        ownerEmail: String,
     },
     methods: {
         sortIdeas(sortType: any) {
@@ -106,6 +113,8 @@ export default {
             try {
                 const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
+                console.log(response.data);
+                
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }

@@ -2,9 +2,12 @@
   <div class="add">
     <h1>Soumettre une idée</h1>
 
+
+    <!-- les champs doivent etre obligatoires  -->
     <div class="add__title">
-      <p>Titre</p>
-      <input type="text" placeholder="EX: Mettre une piscine" v-model="title">
+      <label for="text">Titre</label>
+      <!-- <p>Titre</p> -->
+      <input type="text" placeholder="EX: Mettre une piscine" v-model="title" required>
     </div>
 
     <div class="add__category">
@@ -40,10 +43,15 @@ export default {
       title: "",
       contenu: "",
       showButton: false,
+      userEmail: '',
     }
   },
-  mounted() {
-    this.fetchCategorie()
+  async mounted() {
+    if (process.client) {
+      this.userEmail = localStorage.getItem("userEmail");
+    }
+
+    await this.fetchCategorie();
   },
   methods: {
     createIdea() {
@@ -56,9 +64,8 @@ export default {
             categoryId: parseInt(this.selectedCategory),
           },
         ],
+        ownerEmail: this.userEmail,
       };
-
-
       axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
         .then((response) => {
 

@@ -38,10 +38,12 @@ const signIn = async () => {
   const { error } = await client.auth.signInWithPassword({
     email: email.value,
     password: password.value,
+    
   });
   if (error) {
     errorMsg.value;
   } else {
+    localStorage.setItem('userEmail', email.value)
     router.push('/idea')
   }
 }
