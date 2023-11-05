@@ -5,9 +5,9 @@
   justify-content: center;
   align-items: center;
   padding: 30px;
-  
+
   @media screen and (max-width: 768px) {
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
   }
 }
@@ -16,6 +16,10 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+
+  &__home {
+    text-decoration: none;
+  }
 
   &__logo {
     display: flex;
@@ -44,8 +48,7 @@
   &__bai {
     transform: rotate(1deg);
     color: #fff;
-    //trouver une plus belle police
-    // font-family: "Gotham";
+    font-family: 'Nunito';
     font-size: 40px;
     font-style: normal;
     font-weight: 325;
