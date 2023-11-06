@@ -1,8 +1,4 @@
 <template>
-    <h1>register</h1>
-</template>
-
-<!-- <template>
     <form @submit.prevent="signUp">
         <h1>INSCRIPTION</h1>
         <div>
@@ -74,4 +70,4 @@ const signUp = async () => {
     }
 }
 
-</script> -->
+</script>

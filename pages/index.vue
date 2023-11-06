@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <h1>index</h1>
 
     <RouterLink to="/idea">
@@ -7,9 +7,9 @@
     <RouterLink to="/idea/add">
         <button style="height: 20px;">PAGE add idea</button>
     </RouterLink>
-</template>
+</template> -->
 
-<!-- <template>
+<template>
     <div>
         <form @submit.prevent></form>
     </div>
@@ -47,4 +47,4 @@ definePageMeta({
 
 const user = useSupabaseUser()
 
-</script> -->
+</script>

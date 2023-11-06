@@ -34,7 +34,8 @@
 
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
@@ -44,21 +45,25 @@ export default {
       contenu: "",
       showButton: false,
       userEmail: '',
-    }
+      userId: null, 
+    };
   },
   async mounted() {
     if (process.client) {
       this.userEmail = localStorage.getItem("userEmail");
+      this.userId = localStorage.getItem("userId"); 
     }
 
     await this.fetchCategorie();
+    await this.fetchUsers();
   },
   methods: {
     createIdea() {
       const ideaData = {
         title: this.title,
         description: this.contenu,
-        fkUsersId: 1,
+        fkUsersId: this.userId,
+        // fkUsersId: 1, 
         ideaGetCategory: [
           {
             categoryId: parseInt(this.selectedCategory),
@@ -66,33 +71,50 @@ export default {
         ],
         ownerEmail: this.userEmail,
       };
-      axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
-        .then((response) => {
 
+      axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
+        .then(() => {
           Swal.fire({
             title: "Bravo !",
-            text: "Votre idée a bien était envoyé",
+            text: "Votre idée a bien été envoyée",
             icon: "success",
             confirmButtonText: "OK",
           });
         })
         .catch((error) => {
           console.error(error);
-
           Swal.fire({
             title: "Erreur !",
-            text: "Une erreur est survenu pendant l'envoi de votre idée.",
+            text: "Une erreur est survenue pendant l'envoi de votre idée.",
             icon: "error",
             confirmButtonText: "OK",
           });
-        })
+        });
     },
     async fetchCategorie() {
       const response = await axios.get('https://localhost:7182/Category/GetAllComment');
       this.category = response.data;
-    }
-  }
-}
+    },
+    async fetchUsers() {
+      try {
+        const response = await axios.get('https://localhost:7182/Users/GetAllUsers');
+        this.getUsers = response.data;
+
+        const userEmail = localStorage.getItem('userEmail');
+
+        for (const user of this.getUsers) {
+          if (user.email === userEmail) {
+            this.userId = user.id; 
+            break;
+          }
+        }
+
+      } catch (error) {
+        console.error("Une erreur est survenue lors de la récupération des utilisateurs", error);
+      }
+    },
+  },
+};
 </script>
 
 <style>

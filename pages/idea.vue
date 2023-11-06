@@ -15,12 +15,13 @@
                         <div class="list__image">
                             <div class="list__image-modifier">
                                 <RouterLink to="/idea/modify" v-if="userEmail === ideas.ownerEmail">
-                                    <img src="@/assets/images/icon-modifier-black.png" alt="Modifier" class="list__image-modifier-test">
+                                    <img src="@/assets/images/icon-modifier-black.png" alt="Modifier"
+                                        class="list__image-modifier-test">
                                 </RouterLink>
                             </div>
                             <div class="list__image-delete">
-                                <img src="@/assets/images/icon-delete.png" alt="Supprimer"
-                                @click="deleteIdea(ideas.ideaId)" v-if="userEmail === ideas.ownerEmail">
+                                <img src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.ideaId)"
+                                    v-if="userEmail === ideas.ownerEmail">
                             </div>
                             <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
                             <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
@@ -29,6 +30,7 @@
                             <RouterLink :to="'/idea/' + ideas.ideaId" class="list__detailed">
                                 <p class="list__content">{{ ideas.title }}</p>
                             </RouterLink>
+                            {{ ideas.userId }}
                         </div>
                     </li>
                 </ul>
@@ -36,14 +38,14 @@
         </section>
 
     </div>
-    <!-- <div>
+    <div>
         <button v-if="user" @click="logout">logout</button>
     </div>
     <div v-if="user">
         <p>Logged in as {{ user.email }}</p>
         <p>user id: {{ user.id }}</p>
     </div>
-    <div v-else>Not logged in</div> -->
+    <div v-else>Not logged in</div>
 </template>
 
 <script lang="ts">
@@ -57,17 +59,18 @@ import Swal from 'sweetalert2';
 export default {
     data() {
         return {
-            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string; ownerEmail: string; }[], // Ajoutez une annotation de type pour idea
+            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string; ownerEmail: string; userId: string; }[],
             showButton: true,
             activeSortButton: null,
             showModal: false,
             ownerEmail: '',
-            userEmail: localStorage.getItem('userEmail') || '', // Définissez userEmail à partir du localStorage
+            userEmail: localStorage.getItem('userEmail') || '',
         };
     },
 
     mounted() {
         this.fetchIdea();
+        
     },
     components: {
         Modal,
@@ -115,8 +118,6 @@ export default {
             try {
                 const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
-                console.log(response.data);
-
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }
@@ -132,15 +133,14 @@ export default {
     },
 
 }
+
 if (process.client) {
-    // Code qui utilise localStorage
     const userEmail = localStorage.getItem('userEmail');
-    console.log('Email de l\'utilisateur :', userEmail);
 }
 
 </script>
 
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 
 const user = useSupabaseUser();
 const router = useRouter();
@@ -153,7 +153,7 @@ async function logout() {
 
     router.push('/');
 }
-</script> -->
+</script>
 
 <style scoped>
 @import '@/assets/scss/index.scss';
