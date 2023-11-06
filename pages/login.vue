@@ -1,4 +1,8 @@
+
 <template>
+  <h1>LOGIN</h1>
+</template>
+<!-- <template>
   <div>
     <form @submit.prevent="signIn">
       <h1>LOGIN</h1>
@@ -47,4 +51,4 @@ const signIn = async () => {
     router.push('/idea')
   }
 }
-</script>
+</script> -->

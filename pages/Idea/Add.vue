@@ -1,36 +1,36 @@
 <template>
   <div class="add">
-    <h1>Soumettre une idée</h1>
+    <h1 class="add__head">Soumettre une idée</h1>
+    <form @submit.prevent="createIdea">
+      <div class="add__container">
+        <div class="add__title">
+          <label for="text" class="add__title-up">Titre</label>
+          <input class="add__title-down" type="text" placeholder="EX: Mettre une piscine" v-model="title" required>
+        </div>
 
+        <div class="add__category">
+          <label for="text" class="add__category-up">Catégorie</label>
+          <select v-model="selectedCategory" class="add__category-down" required>
+            <option v-for="categorie in category" :value="categorie.id" :key="categorie.id">
+              {{ categorie.name }}
+            </option>
+          </select>
+        </div>
 
-    <!-- les champs doivent etre obligatoires  -->
-    <div class="add__title">
-      <label for="text">Titre</label>
-      <!-- <p>Titre</p> -->
-      <input type="text" placeholder="EX: Mettre une piscine" v-model="title" required>
-    </div>
+        <div class="add__content">
+          <label for="contenu" class="add__content-up">Contenu</label>
+          <textarea class="add__content-down" id="contenu" v-model="contenu" rows="4" cols="80" required></textarea>
+        </div>
 
-    <div class="add__category">
-      <p>Catégorie</p>
-      <select v-model="selectedCategory">
-        <option v-for="categorie in category" :value="categorie.id" :key="categorie.id">
-          {{ categorie.name }}
-        </option>
-      </select>
-    </div>
-
-    <div>
-      <p>Contenu</p>
-      <textarea id="contenu" v-model="contenu" rows="4" cols="80" required></textarea>
-    </div>
-
-    <button>
-      <p>Envoyez</p>
-      <img src="@/assets/images/icon-envoier.png" alt="bouton envoyer" @click="createIdea()">
-    </button>
+        <button type="submit" class="add__button">
+          <label for="text"></label>
+          <span class="add__button-up">Envoyer</span>
+          <img class="add__button-down" src="@/assets/images/icon-envoier.png" alt="bouton envoyer">
+        </button>
+      </div>
+    </form>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
@@ -95,4 +95,6 @@ export default {
 }
 </script>
 
-
+<style>
+@import '@/assets/scss/add.scss';
+</style>

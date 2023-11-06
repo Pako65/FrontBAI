@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/supabase'],
+  // modules: ['@nuxtjs/supabase'],
   app: {
     head: {
       charset: 'utf8',
@@ -10,9 +10,9 @@ export default defineNuxtConfig({
   css: [
     "@/assets/scss/main.scss",
   ],
-  supabase: {
-    url: process.env.SUPABASE_URL,
-    key: process.env.SUPABASE_KEY,
-    redirect: false,
-  }
+  // supabase: {
+  //   url: process.env.SUPABASE_URL,
+  //   key: process.env.SUPABASE_KEY,
+  //   redirect: false,
+  // }
 })
