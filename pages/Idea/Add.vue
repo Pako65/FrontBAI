@@ -5,12 +5,13 @@
       <div class="add__container">
         <div class="add__title">
           <label for="text" class="add__title-up">Titre</label>
-          <input class="add__title-down" type="text" placeholder="EX: Mettre une piscine" v-model="title" required>
+          <input class="add__title-down" type="text" placeholder="Ex : Mettre une piscine pour les beaux jours :)" v-model="title" required>
         </div>
 
         <div class="add__category">
           <label for="text" class="add__category-up">Catégorie</label>
-          <select v-model="selectedCategory" class="add__category-down" required>
+          <select v-model="selectedCategory" class="add__category-down"  required>
+            <option class="add__category-default" value="" disabled selected>Sélectionnez une catégorie</option>
             <option v-for="categorie in category" :value="categorie.id" :key="categorie.id">
               {{ categorie.name }}
             </option>
@@ -40,7 +41,7 @@ export default {
   data() {
     return {
       category: [],
-      selectedCategory: 1,
+      selectedCategory: '',
       title: "",
       contenu: "",
       showButton: false,
@@ -58,6 +59,11 @@ export default {
     await this.fetchUsers();
   },
   methods: {
+    handleCategory() {
+      if (this.selectedCategory === '') {
+        this.selectedCategory = '';
+      }
+    },
     createIdea() {
       const ideaData = {
         title: this.title,
@@ -92,7 +98,7 @@ export default {
         });
     },
     async fetchCategorie() {
-      const response = await axios.get('https://localhost:7182/Category/GetAllComment');
+      const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
       this.category = response.data;
     },
     async fetchUsers() {

@@ -29,6 +29,7 @@ export default {
     try {
       const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`);
       this.idea = response.data;
+      console.log(response.data);
     } catch (error) {
       console.error("An error occurred while fetching idea details", error);
     }

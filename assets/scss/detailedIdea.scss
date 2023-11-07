@@ -10,7 +10,7 @@
 
     &__head {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         gap: 24px;
         margin-bottom: 48px;
         width: 1200px;
@@ -27,7 +27,7 @@
     &__title {
         font-family: 'Nunito';
         font-size: 28px;
-        line-height: 24px;
+        line-height: 30px;
     }
 
     &__content {
