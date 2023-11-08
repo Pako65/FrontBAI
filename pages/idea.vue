@@ -14,31 +14,29 @@
                     <li v-for="ideas in idea" class="list__li">
                         <div class="list__image">
                             <div class="list__image-modifier">
-
-
                                 <RouterLink :to="'/idea/modify/' + ideas.ideaId" v-if="userEmail === ideas.ownerEmail">
                                     <img src="@/assets/images/icon-modifier-black.png" alt="Modifier"
                                         class="list__image-modifier-test">
                                 </RouterLink>
-
-
                             </div>
                             <div class="list__image-delete">
                                 <img src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.ideaId)"
                                     v-if="userEmail === ideas.ownerEmail">
                             </div>
-                            <img src="@/assets/images/coeur-plein.png" alt="Coeur 1">
-                            <img src="@/assets/images/coeur-vide.png" alt="Coeur 2">
+
+
+                            <div>
+                                <img v-if="ideas.isLiked == true" src="@/assets/images/coeur-plein.png" alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId)">
+                                <img v-else src="@/assets/images/coeur-vide.png" alt="Coeur 2" @click="addLikes(ideas.ideaId)">
+                            </div>
+
+
+                            
                             <p class="list__date">{{ formatDate(ideas.createdAt) }}</p>
                             <p class="list__tag">{{ ideas.categoryName }}</p>
-
-
                             <RouterLink :to="'/idea/' + ideas.ideaId" class="list__detailed">
                                 <p class="list__content">{{ shortText(ideas.title, 60) }}</p>
                             </RouterLink>
-
-
-                            {{ ideas.userId }}
                         </div>
                     </li>
                 </ul>
@@ -67,23 +65,60 @@ import Swal from 'sweetalert2';
 export default {
     data() {
         return {
-            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string; ownerEmail: string; userId: string; }[],
+            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string; ownerEmail: string; userId: string; isLiked: boolean }[],
+            likes: [],
+            total: [],
             showButton: true,
             activeSortButton: null,
             showModal: false,
             ownerEmail: '',
             userEmail: localStorage.getItem('userEmail') || '',
+            isLiked: false,
         };
     },
 
     mounted() {
         this.fetchIdea();
-
+        this.getLikes();
+        this.getTotalLikes();
     },
     components: {
         Modal,
     },
     methods: {
+        async getTotalLikes() {
+            const response = await axios.get('https://localhost:7182/Procedure/GetTotalLikes')
+            this.total = response.data
+            console.log(this.total);
+            
+        },
+        async getLikes() {
+            const response = await axios.get('https://localhost:7182/Likes/GetAllLikes')
+            this.likes = response.data;
+            console.log(this.likes);
+            
+        },
+        addLikes(ideaId: number, ) {
+            //rajouter l'user id si tu es sur que ca marche
+            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=1&ideaId=${ideaId}`)
+                .then((response) => {
+                    this.isLiked = true; 
+                    return response.data;
+                })
+                .catch(error => {
+                    console.error("Error lors de l'ajout de like", error);
+                });
+        },
+        removedLikes(ideaId: number) {
+            // pareil ici, gérer avec l'user id
+            axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=1&ideaId=${ideaId}`)
+                .then(response => {
+                    console.log('idée remove', response)
+                    this.isLiked = false;
+                }).catch(error => {
+                    console.error("Erreur lors de la suppression du like", error)
+                })
+        },
         shortText(description: String, maxLength: number) {
             if (description.length <= maxLength) {
                 return description
@@ -131,7 +166,7 @@ export default {
                 const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
                 console.log(this.idea);
-                
+
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }
@@ -145,12 +180,17 @@ export default {
             return this.activeSortButton !== null;
         },
     },
+    watch: {
+
+    }
 
 }
 
-// if (process.client) {
-//     const userEmail = localStorage.getItem('userEmail');
-// }
+if (process.client) {
+    const userEmail = localStorage.getItem('userEmail');
+    const userId = localStorage.getItem("userId"); 
+
+}
 
 </script>
 <!-- 
