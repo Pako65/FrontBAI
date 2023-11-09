@@ -29,9 +29,9 @@
         <button type="submit">Sign Up</button>
         <div>
             <p>déjà un compte ?</p> 
-            <RouterLink to="/login">
+            <NuxtLink to="/login">
                 <button>login</button>
-            </RouterLink>
+            </NuxtLink>
         </div>
     </form>
 </template>

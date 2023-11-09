@@ -10,7 +10,7 @@
   &__head {
     width: 1200px;
     color: #000;
-    font-family: 'Nunito';
+    font-family: $font;
     font-size: 28px;
     line-height: 24px;
     margin: 36px 0 48px 0;
@@ -31,7 +31,7 @@
 
     &-up {
         color: #000;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 24px;
         line-height: 24px;
     }
@@ -53,7 +53,7 @@
 
     &-up {
         color: #000;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 24px;
         line-height: 24px;
     }
@@ -77,7 +77,7 @@
 
     &-up {
         color: #000;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 24px;
         line-height: 24px;
     }
@@ -104,7 +104,7 @@
 
     &-up {
         color: #fff;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 28px;
     }
 

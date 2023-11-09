@@ -1,12 +1,12 @@
 <template>
     <h1>index</h1>
 
-    <RouterLink to="/idea">
+    <NuxtLink to="/idea">
         <button style="height: 20px;">PAGE IDEA</button>
-    </RouterLink>
-    <RouterLink to="/idea/add">
+    </NuxtLink>
+    <NuxtLink to="/idea/add">
         <button style="height: 20px;">PAGE add idea</button>
-    </RouterLink>
+    </NuxtLink>
 </template>
 <!-- 
 <template>
@@ -20,23 +20,23 @@
     </div>
     <div v-else>
         <p>you are not logged in
-            <RouterLink to="/login">login</RouterLink> or
-            <RouterLink to="/register">register</RouterLink>
+            <NuxtLink to="/login">login</NuxtLink> or
+            <NuxtLink to="/register">register</NuxtLink>
         </p>
     </div>
 
-    <RouterLink to="/idea">
+    <NuxtLink to="/idea">
         <button style="height: 20px;">PAGE IDEA</button>
-    </RouterLink>
-    <RouterLink to="/idea/add">
+    </NuxtLink>
+    <NuxtLink to="/idea/add">
         <button style="height: 20px;">PAGE add idea</button>
-    </RouterLink>
-    <RouterLink to="/login">
+    </NuxtLink>
+    <NuxtLink to="/login">
         <button style="height: 20px;">PAGE login</button>
-    </RouterLink>
-    <RouterLink to="/register">
+    </NuxtLink>
+    <NuxtLink to="/register">
         <button style="height: 20px;">PAGE register</button>
-    </RouterLink>
+    </NuxtLink>
 </template>
 
 <script setup lang="ts">

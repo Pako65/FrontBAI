@@ -21,18 +21,18 @@
         background-color: $orange;
         border-radius: 50px;
         color: #fff;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 20px;
     }
     &__title {
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 28px;
         line-height: 30px;
     }
 
     &__content {
         color: #000;
-        font-family: 'Nunito';
+        font-family: $font;
         font-size: 20px;
         line-height: 24px;
         width: 1200px;

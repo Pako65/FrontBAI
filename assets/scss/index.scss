@@ -8,7 +8,7 @@
 
   &__title {
     color: #000;
-    font-family: "Nunito";
+    font-family: $font;
     font-size: 28px;
     font-style: normal;
     font-weight: 800;
@@ -17,7 +17,7 @@
   }
   &__date {
     color: #000;
-    font-family: "Nunito";
+    font-family: $font;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -30,12 +30,12 @@
     border-radius: 50px;
     margin: 3px;
     text-align: center;
-    font-family: "Nunito";
+    font-family: $font;
     font-size: 20px;
   }
   &__content {
     color: #000;
-    font-family: "Nunito";
+    font-family: $font;
     font-size: 24px;
     font-style: normal;
     font-weight: 325;
@@ -57,7 +57,7 @@
   }
   &__p {
     color: #404040;
-    font-family: "Nunito";
+    font-family: $font;
     font-size: 22px;
     font-weight: 400;
   }
@@ -66,6 +66,10 @@
     display: flex;
   }
   &__image {
+    &-container {
+      position: relative;
+      display: inline-block;
+    }
     &-modifier {
       width: 25px;
       height: 24px;
@@ -76,7 +80,17 @@
     &-delete {
       width: 25px;
       height: 24px;
-      // cursor: pointer;
+      cursor: pointer;
+    }
+    &-like {
+      display: flex;
+      align-items: baseline;
+      cursor: pointer;
+    }
+    &-total {
+      color: #e52b42;
+      font-family: $font;
+      font-size: 14px;
     }
   }
   &__idea {
@@ -97,4 +111,3 @@
     gap: 20px;
   }
 }
-

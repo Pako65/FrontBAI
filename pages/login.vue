@@ -20,9 +20,9 @@
 
     <div>
       <p>déjà un compte ?</p>
-      <RouterLink to="/register">
+      <NuxtLink to="/register">
         <button>login</button>
-      </RouterLink>
+      </NuxtLink>
     </div>
   </div>
 </template>

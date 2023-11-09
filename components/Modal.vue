@@ -20,6 +20,28 @@
                             </button>
                         </div>
                     </div>
+                    <div class="modal__filter">
+                        <h3 class="modal__filter-title">Date</h3>
+                        <div class="modal__buttons">
+                            <button class="modal__buttons-a" :class="{ active: activeSortButton === 'plus-date' }"
+                                @click="selectedFiltrer('plus-date')"> plus récente
+                            </button>
+                            <button class="modal__buttons-a" :class="{ active: activeSortButton === 'less-date' }"
+                                @click="selectedFiltrer('less-date')"> plus ancienne
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal__filter">
+                        <h3 class="modal__filter-title">Likes</h3>
+                        <div class="modal__buttons">
+                            <button class="modal__buttons-a" :class="{ active: activeSortButton === 'plus-likes' }"
+                                @click="selectedFiltrer('plus-likes')"> plus liké
+                            </button>
+                            <button class="modal__buttons-a" :class="{ active: activeSortButton === 'less-likes' }"
+                                @click="selectedFiltrer('less-likes')"> moins liké
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -28,17 +50,34 @@
 </template>
   
 <script>
+import axios from 'axios'
+
+
 export default {
     data() {
         return {
             showModal: false,
             activeSortButton: null,
+            category: [],
+            selectedCategory: '',
         };
     },
     props: {
         show: Boolean
     },
+    mounted() {
+        this.fetchCategorie();
+    },
     methods: {
+        handleCategory() {
+            if (this.selectedCategory === '') {
+                this.selectedCategory = '';
+            }
+        },
+        async fetchCategorie() {
+            const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
+            this.category = response.data;
+        },
         selectedFiltrer(sortType) {
             this.$emit('sort-ideas', sortType)
         },

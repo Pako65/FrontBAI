@@ -14,29 +14,28 @@
                     <li v-for="ideas in idea" class="list__li">
                         <div class="list__image">
                             <div class="list__image-modifier">
-                                <RouterLink :to="'/idea/modify/' + ideas.ideaId" v-if="userEmail === ideas.ownerEmail">
+                                <NuxtLink :to="'/idea/modify/' + ideas.ideaId" v-if="userEmail === ideas.ownerEmail">
                                     <img src="@/assets/images/icon-modifier-black.png" alt="Modifier"
                                         class="list__image-modifier-test">
-                                </RouterLink>
+                                </NuxtLink>
                             </div>
                             <div class="list__image-delete">
                                 <img src="@/assets/images/icon-delete.png" alt="Supprimer" @click="deleteIdea(ideas.ideaId)"
                                     v-if="userEmail === ideas.ownerEmail">
                             </div>
-
-
-                            <div>
-                                <img v-if="ideas.isLiked == true" src="@/assets/images/coeur-plein.png" alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId)">
-                                <img v-else src="@/assets/images/coeur-vide.png" alt="Coeur 2" @click="addLikes(ideas.ideaId)">
+                            <div class="list__image-like">
+                                <img v-if="ideas.isLiked" src="@/assets/images/coeur-plein.png" alt="ne pas aimer une idée"
+                                    @click="removedLikes(ideas.ideaId)">
+                                <img v-else src="@/assets/images/coeur-vide.png" alt="Coeur 2"
+                                    @click="addLikes(ideas.ideaId)">
+                                <p class="list__image-total">{{ ideas.totalLikes }}</p>
                             </div>
 
-
-                            
                             <p class="list__date">{{ formatDate(ideas.createdAt) }}</p>
                             <p class="list__tag">{{ ideas.categoryName }}</p>
-                            <RouterLink :to="'/idea/' + ideas.ideaId" class="list__detailed">
+                            <NuxtLink :to="'/idea/' + ideas.ideaId" class="list__detailed">
                                 <p class="list__content">{{ shortText(ideas.title, 60) }}</p>
-                            </RouterLink>
+                            </NuxtLink>
                         </div>
                     </li>
                 </ul>
@@ -56,7 +55,8 @@
 
 <script lang="ts">
 
-// regarde pour comment définir le localStorage tu as une réponse a la fin du fichier qui a l'air intéressant
+//regarder pour faire une requete test avec postman
+
 import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 import moment from 'moment';
@@ -65,7 +65,16 @@ import Swal from 'sweetalert2';
 export default {
     data() {
         return {
-            idea: [] as { ideaId: number; title: string; createdAt: string; categoryName: string; ownerEmail: string; userId: string; isLiked: boolean }[],
+            idea: [] as {
+                ideaId: number;
+                title: string;
+                createdAt: string;
+                categoryName: string;
+                ownerEmail: string;
+                userId: string;
+                isLiked: false;
+                totalLikes: number;
+            }[],
             likes: [],
             total: [],
             showButton: true,
@@ -74,35 +83,30 @@ export default {
             ownerEmail: '',
             userEmail: localStorage.getItem('userEmail') || '',
             isLiked: false,
+            likeCount: null,
         };
     },
-
     mounted() {
+        if (process.client) {
+            const userEmail = localStorage.getItem('userEmail');
+            const userId = localStorage.getItem("userId");
+            console.log(userEmail);
+            console.log(userId);
+        }
+
         this.fetchIdea();
-        this.getLikes();
-        this.getTotalLikes();
     },
     components: {
         Modal,
     },
     methods: {
-        async getTotalLikes() {
-            const response = await axios.get('https://localhost:7182/Procedure/GetTotalLikes')
-            this.total = response.data
-            console.log(this.total);
-            
-        },
-        async getLikes() {
-            const response = await axios.get('https://localhost:7182/Likes/GetAllLikes')
-            this.likes = response.data;
-            console.log(this.likes);
-            
-        },
-        addLikes(ideaId: number, ) {
+        addLikes(ideaId: number) {
             //rajouter l'user id si tu es sur que ca marche
+            //faut gérer les likes par rapport a l'utilisateur connecté tu pourras voir sa ce soir
             axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=1&ideaId=${ideaId}`)
                 .then((response) => {
-                    this.isLiked = true; 
+                    this.isLiked = true;
+                    this.fetchIdea();
                     return response.data;
                 })
                 .catch(error => {
@@ -115,6 +119,8 @@ export default {
                 .then(response => {
                     console.log('idée remove', response)
                     this.isLiked = false;
+                    this.fetchIdea();
+                    return response.data
                 }).catch(error => {
                     console.error("Erreur lors de la suppression du like", error)
                 })
@@ -127,13 +133,29 @@ export default {
             }
         },
         sortIdeas(sortType: any) {
-            if (sortType === 'A-Z-Title') {
-                this.idea.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (sortType === 'Z-A-Title') {
-                this.idea.sort((a, b) => b.title.localeCompare(a.title));
+            switch (sortType) {
+                case "A-Z-Title":
+                    this.idea.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case "Z-A-Title":
+                    this.idea.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case "plus-date":
+                    this.idea.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+                    break;
+                case "less-date":
+                    this.idea.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+                    break;
+                case "plus-likes":
+                    this.idea.sort((a, b) => b.totalLikes - a.totalLikes);
+                    break;
+                case "less-likes":
+                    this.idea.sort((a, b) => a.totalLikes - b.totalLikes)
+                    break;
+                default:
+                    break;
             }
-
-            this.activeSortButton = sortType;
+            this.activeSortButton = sortType
         },
         openModal() {
             this.showModal = true;
@@ -186,11 +208,6 @@ export default {
 
 }
 
-if (process.client) {
-    const userEmail = localStorage.getItem('userEmail');
-    const userId = localStorage.getItem("userId"); 
-
-}
 
 </script>
 <!-- 
