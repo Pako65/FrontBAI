@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <h1>index</h1>
 
     <NuxtLink to="/idea">
@@ -7,8 +7,8 @@
     <NuxtLink to="/idea/add">
         <button style="height: 20px;">PAGE add idea</button>
     </NuxtLink>
-</template>
-<!-- 
+</template> -->
+
 <template>
     <div>
         <form @submit.prevent></form>
@@ -47,4 +47,4 @@ definePageMeta({
 
 const user = useSupabaseUser()
 
-</script> -->
+</script>

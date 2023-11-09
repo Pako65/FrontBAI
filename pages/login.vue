@@ -1,8 +1,8 @@
 
-<template>
-  <h1>LOGIN</h1>
-</template>
 <!-- <template>
+  <h1>LOGIN</h1>
+</template> -->
+<template>
   <div>
     <form @submit.prevent="signIn">
       <h1>LOGIN</h1>
@@ -20,9 +20,9 @@
 
     <div>
       <p>déjà un compte ?</p>
-      <NuxtLink to="/register">
+      <RouterLink to="/register">
         <button>login</button>
-      </NuxtLink>
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -48,7 +48,12 @@ const signIn = async () => {
     errorMsg.value;
   } else {
     localStorage.setItem('userEmail', email.value)
+    if (email.value == 'nico.carbo@orange.fr') {
+      localStorage.setItem('userId', '1')
+    } else {
+      localStorage.setItem('userId', '2')
+    }
     router.push('/idea')
   }
 }
-</script> -->
+</script>

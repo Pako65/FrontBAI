@@ -22,10 +22,8 @@ export default {
     };
   },
   async created() {
-    // Access the idea ID from the route parameter
     const ideaId = this.$route.params.id;
 
-    // Fetch idea details based on the ID
     try {
       const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`);
       this.idea = response.data;

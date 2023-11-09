@@ -24,12 +24,13 @@
                                     v-if="userEmail === ideas.ownerEmail">
                             </div>
                             <div class="list__image-like">
-                                <img v-if="ideas.isLiked" src="@/assets/images/coeur-plein.png" alt="ne pas aimer une idée"
-                                    @click="removedLikes(ideas.ideaId)">
+                                <img v-if="getIsLiked(ideas.ideaId)" src="@/assets/images/coeur-plein.png"
+                                    alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId, userDataId)">
                                 <img v-else src="@/assets/images/coeur-vide.png" alt="Coeur 2"
-                                    @click="addLikes(ideas.ideaId)">
+                                    @click="addLikes(ideas.ideaId, userDataId)">
                                 <p class="list__image-total">{{ ideas.totalLikes }}</p>
                             </div>
+
 
                             <p class="list__date">{{ formatDate(ideas.createdAt) }}</p>
                             <p class="list__tag">{{ ideas.categoryName }}</p>
@@ -43,14 +44,14 @@
         </section>
 
     </div>
-    <!-- <div>
+    <div>
         <button v-if="user" @click="logout">logout</button>
     </div>
     <div v-if="user">
         <p>Logged in as {{ user.email }}</p>
         <p>user id: {{ user.id }}</p>
     </div>
-    <div v-else>Not logged in</div> -->
+    <div v-else>Not logged in</div>
 </template>
 
 <script lang="ts">
@@ -71,10 +72,11 @@ export default {
                 createdAt: string;
                 categoryName: string;
                 ownerEmail: string;
-                userId: string;
+                userId: number;
                 isLiked: false;
                 totalLikes: number;
             }[],
+            likesByIdea: {} as Record<number, number[]>,
             likes: [],
             total: [],
             showButton: true,
@@ -83,47 +85,61 @@ export default {
             ownerEmail: '',
             userEmail: localStorage.getItem('userEmail') || '',
             isLiked: false,
-            likeCount: null,
+            userLikes: [] as number[],
+            userDataId: localStorage.getItem('userId') || '',
         };
     },
     mounted() {
         if (process.client) {
             const userEmail = localStorage.getItem('userEmail');
-            const userId = localStorage.getItem("userId");
+            const userDataId = localStorage.getItem('userId');
             console.log(userEmail);
-            console.log(userId);
+            console.log(userDataId);
         }
 
         this.fetchIdea();
+        // this.fetchUsers();
     },
     components: {
         Modal,
     },
     methods: {
-        addLikes(ideaId: number) {
-            //rajouter l'user id si tu es sur que ca marche
-            //faut gérer les likes par rapport a l'utilisateur connecté tu pourras voir sa ce soir
-            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=1&ideaId=${ideaId}`)
-                .then((response) => {
-                    this.isLiked = true;
-                    this.fetchIdea();
-                    return response.data;
+        addLikes(ideaId: number, userDataId: string) {
+        console.log(userDataId)
+        axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`)
+            .then((response) => {
+                this.fetchUserLikes(userDataId);
+                this.fetchIdea();
+                console.log(response.data);
+                
+                return response.data;
+            })
+            .catch(error => {
+                console.error("Error lors de l'ajout de like", error);
+            });
+    },
+    removedLikes(ideaId: number, userDataId: string) {
+        axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=${userDataId}&ideaId=${ideaId}`)
+            .then(response => {
+                this.fetchUserLikes(userDataId);
+                this.fetchIdea();
+                return response.data
+            }).catch(error => {
+                console.error("Erreur lors de la suppression du like", error)
+            })
+    },
+        getIsLiked(ideaId: number): boolean {
+            // Vérifier si l'idée est likée par l'utilisateur actuel
+            return this.userLikes.includes(ideaId);
+        },
+        fetchUserLikes(userDataId: string) {
+            axios.get(`https://localhost:7182/Likes/GetUserLikes?userId=${userDataId}`)
+                .then(response => {
+                    this.userLikes = response.data; // Mettre à jour les likes spécifiques à l'utilisateur
                 })
                 .catch(error => {
-                    console.error("Error lors de l'ajout de like", error);
+                    console.error("Erreur lors de la récupération des likes de l'utilisateur", error);
                 });
-        },
-        removedLikes(ideaId: number) {
-            // pareil ici, gérer avec l'user id
-            axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=1&ideaId=${ideaId}`)
-                .then(response => {
-                    console.log('idée remove', response)
-                    this.isLiked = false;
-                    this.fetchIdea();
-                    return response.data
-                }).catch(error => {
-                    console.error("Erreur lors de la suppression du like", error)
-                })
         },
         shortText(description: String, maxLength: number) {
             if (description.length <= maxLength) {
@@ -193,6 +209,11 @@ export default {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }
         },
+        // async fetchUsers() {
+        //     const response = await axios.get('https://localhost:7182/Users/GetAllUsers');
+        //     this.userData = response.data;
+        //     console.log(this.userData)
+        // },
         formatDate(createdAt: string) {
             return moment(createdAt).format("DD/MM/YYYY");
         }
@@ -210,7 +231,7 @@ export default {
 
 
 </script>
-<!-- 
+
 <script setup lang="ts">
 
 const user = useSupabaseUser();
@@ -224,7 +245,7 @@ async function logout() {
 
     router.push('/');
 }
-</script> -->
+</script>
 
 <style scoped>
 @import '@/assets/scss/index.scss';

@@ -105,7 +105,6 @@ export default {
       try {
         const response = await axios.get('https://localhost:7182/Users/GetAllUsers');
         this.getUsers = response.data;
-
         const userEmail = localStorage.getItem('userEmail');
 
         for (const user of this.getUsers) {
