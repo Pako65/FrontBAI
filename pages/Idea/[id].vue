@@ -5,11 +5,56 @@
       <h1 class="detailedIdea__title">{{ ideas.title }}</h1>
     </div>
     <div class="detailedIdea__content">{{ ideas.description }}</div>
+
+
+    <div v-if="!addingComment" class="detailedIdea__newComment">
+      <button type="submit" class="detailedIdea__new" @click="addingComment = true">
+        <label for="text"></label>
+        <span class="detailedIdea__new-up">Ajouter un commentaire</span>
+        <img class="detailedIdea__new-down" src="@/assets/images/icon-ajouter.png" alt="Ajouter nouvelle idée">
+      </button>
+    </div>
+    <div class="detailedIdea__newCom" v-else>
+      <textarea class="detailedIdea__newCom-up" v-model="text" placeholder="Ajouter un commentaire..."
+        required></textarea>
+      <button class="detailedIdea__newCom-down" @click.prevent="createComment" :disabled="text.trim().length === 0">
+        <span class="detailedIdea__send">Envoyer</span>
+        <img class="detailedIdea__img" src="@/assets/images/icon-envoier.png" alt="envoie nouveau commentaire">
+      </button>
+    </div>
+
+    <section v-if="comment && comment.length > 0">
+      <div class="detailedIdea__comment" v-for="comments in comment">
+        <div class="detailedIdea__text">
+          <p v-if="editingCommentId !== comments.id">
+            {{ comments.text }}
+          </p>
+          <input v-else v-model="editedCommentText" />
+          <p class="detailedIdea__date">{{ formatDate(comments.createdAt) }}</p>
+        </div>
+        <div class="detailedIdea__icon">
+          <img v-if="userId == comments.userId && editingCommentId !== comments.id"
+            src="@/assets/images/icon-modifier-black.png" alt="modifier un commentaire"
+            @click="startEditing(comments.id)">
+          <button v-if="userId == comments.userId && editingCommentId === comments.id" @click="saveEdit">Modifier</button>
+          <img v-if="userId == comments.userId && editingCommentId !== comments.id" src="@/assets/images/icon-delete.png"
+            alt="supprimer un commentaire" @click="deleteComment(comments.id)">
+        </div>
+      </div>
+    </section>
+    <div v-else>
+      <div class="detailedIdea__noComment">
+        <h1 class="detailedIdea__noCom">Pas de commentaire pour cette idée</h1>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
+
 import axios from 'axios';
+import moment from 'moment'
+import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -18,23 +63,110 @@ export default {
         categoryName: '',
         title: '',
         description: ''
-      }
+      },
+      comment: {},
+      addingComment: false,
+      editingCommentId: null,
+      editedCommentText: '',
+      text: "",
+      userId: '',
     };
+  },
+  async mounted() {
+    if (process.client) {
+      this.userEmail = localStorage.getItem("userEmail");
+      this.userId = localStorage.getItem("userId");
+      console.log(this.userId)
+    }
+  },
+  methods: {
+    startEditing(commentId) {
+      this.editingCommentId = commentId;
+      this.editedCommentText = this.comment.find(c => c.id === commentId).text;
+    },
+    saveEdit() {
+      const editedComment = this.comment.find(c => c.id === this.editingCommentId);
+      editedComment.text = this.editedCommentText;
+
+      this.editingCommentId = null;
+      this.editedCommentText = '';
+
+    },
+    formatDate(createdAt) {
+      return moment(createdAt).format("DD/MM/YYYY")
+    },
+    submitForm() {
+      const modifyData = {
+        text: this.text,
+        userId: this.userId,
+        ideaId: this.ideaId,
+      };
+      console.log(modifyData);
+      axios.put(`https://localhost:7182/Comments/${commentId}/ModifyComments`, modifyData)
+        .then(() => {
+          Swal.fire("Idée modifiée", "", "success", "Ok");
+        }).catch((error) => {
+          console.error(error);
+          Swal.fire("Erreur ! ", "", "error", "Ok")
+        })
+    },
+    async createComment() {
+      const commentData = {
+        text: this.text,
+        userId: this.userId,
+        ideaId: this.$route.params.id,
+      };
+      console.log(this.userId);
+      try {
+        await axios.post(`https://localhost:7182/Comments/CreateNewComments`, commentData);
+
+        const ideaId = this.$route.params.id;
+        const commentResponse = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
+        this.comment = commentResponse.data;
+
+        Swal.fire({
+          title: "Bravo !",
+          text: "Votre commentaire a bien été envoyé",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+
+        this.text = "";
+        this.addingComment = false;
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: "Erreur !",
+          text: "Une erreur est survenue pendant l'envoi de votre commentaire.",
+          confirmButtonText: "OK",
+        });
+      }
+    },
   },
   async created() {
     const ideaId = this.$route.params.id;
-
+    //fetch idea
     try {
       const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`);
       this.idea = response.data;
+      console.log('User ID from localStorage:', this.userId);
+      console.log('User ID from comment:', this.comment.userId);
+    } catch (error) {
+      console.error("erreur pendant le fetch de l'idée", error);
+    }
+    //fetch comment
+    try {
+      const response = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
+      this.comment = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      console.log('User ID from localStorage:', this.userId);
+      console.log('User ID from comment:', this.comment.userId);
       console.log(response.data);
     } catch (error) {
-      console.error("An error occurred while fetching idea details", error);
+      console.error("error fetch comment", error);
     }
   }
-};
+}
+
 </script>
 
-<style>
-@import '@/assets/scss/detailedidea.scss';
-</style>
+<style>@import '@/assets/scss/detailedidea.scss';</style>

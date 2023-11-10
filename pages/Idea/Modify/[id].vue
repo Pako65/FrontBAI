@@ -58,10 +58,10 @@ export default {
             if (selectedCategory) {
                 this.selectedCategoryId = selectedCategory.id;
             } else {
-                this.selectedCategory = null;   
+                this.selectedCategory = null;
             }
         },
-        async submitForm() {
+        submitForm() {
             const ideaData = {
                 title: this.form.title,
                 description: this.form.description,
