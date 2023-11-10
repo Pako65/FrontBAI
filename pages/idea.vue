@@ -93,10 +93,8 @@ export default {
         if (process.client) {
             const userEmail = localStorage.getItem('userEmail');
             const userDataId = localStorage.getItem('userId');
-            console.log(userEmail);
-            console.log(userDataId);
         }
-
+        this.loadUserLikes();
         this.fetchIdea();
         // this.fetchUsers();
     },
@@ -104,30 +102,37 @@ export default {
         Modal,
     },
     methods: {
+        loadUserLikes() {
+            try {
+                if (this.userDataId) {
+                    this.fetchUserLikes(this.userDataId);
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des likes")
+            }
+        },
         addLikes(ideaId: number, userDataId: string) {
-        console.log(userDataId)
-        axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`)
-            .then((response) => {
-                this.fetchUserLikes(userDataId);
-                this.fetchIdea();
-                console.log(response.data);
-                
-                return response.data;
-            })
-            .catch(error => {
-                console.error("Error lors de l'ajout de like", error);
-            });
-    },
-    removedLikes(ideaId: number, userDataId: string) {
-        axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=${userDataId}&ideaId=${ideaId}`)
-            .then(response => {
-                this.fetchUserLikes(userDataId);
-                this.fetchIdea();
-                return response.data
-            }).catch(error => {
-                console.error("Erreur lors de la suppression du like", error)
-            })
-    },
+            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`)
+                .then((response) => {
+                    this.fetchUserLikes(userDataId);
+                    this.fetchIdea();
+
+                    return response.data;
+                })
+                .catch(error => {
+                    console.error("Error lors de l'ajout de like", error);
+                });
+        },
+        removedLikes(ideaId: number, userDataId: string) {
+            axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=${userDataId}&ideaId=${ideaId}`)
+                .then(response => {
+                    this.fetchUserLikes(userDataId);
+                    this.fetchIdea();
+                    return response.data
+                }).catch(error => {
+                    console.error("Erreur lors de la suppression du like", error)
+                })
+        },
         getIsLiked(ideaId: number): boolean {
             // Vérifier si l'idée est likée par l'utilisateur actuel
             return this.userLikes.includes(ideaId);
@@ -203,7 +208,6 @@ export default {
             try {
                 const response = await axios.get('https://localhost:7182/Idea/GetAll');
                 this.idea = response.data;
-                console.log(this.idea);
 
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
@@ -212,7 +216,6 @@ export default {
         // async fetchUsers() {
         //     const response = await axios.get('https://localhost:7182/Users/GetAllUsers');
         //     this.userData = response.data;
-        //     console.log(this.userData)
         // },
         formatDate(createdAt: string) {
             return moment(createdAt).format("DD/MM/YYYY");
