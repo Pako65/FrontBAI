@@ -2,23 +2,28 @@
 
 .navbar {
   display: flex;
-  width: 1728px;
-  padding-top: 30px;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 30px;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .navigation {
   display: flex;
-  width: 1200px;
   justify-content: space-between;
+  width: 100%;
+
+  &__home {
+    text-decoration: none;
+  }
 
   &__logo {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 16px;
   }
 
   &__img {
@@ -43,8 +48,7 @@
   &__bai {
     transform: rotate(1deg);
     color: #fff;
-    //trouver une plus belle police
-    // font-family: "Gotham";
+    font-family: $font;
     font-size: 40px;
     font-style: normal;
     font-weight: 325;
@@ -70,6 +74,7 @@
     border-radius: 6px;
     background: $orange;
     border: none;
+    cursor: pointer;
 
   }
 

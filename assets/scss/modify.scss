@@ -1,0 +1,116 @@
+@import "@/assets/scss/main.scss";
+
+.modify {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  &__head {
+    width: 1200px;
+    color: #000;
+    font-family: $font;
+    font-size: 28px;
+    line-height: 24px;
+    margin: 36px 0 48px 0;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 1200px;
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    &-up {
+        color: #000;
+        font-family: $font;
+        font-size: 24px;
+        line-height: 24px;
+    }
+    &-down {
+        width: 800px;
+        height: 40px;
+        padding: 0px 20px;
+        align-items: center;
+        border-radius: 6px;
+        border: 2px solid $orange;
+    }
+  }
+
+  &__category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    &-up {
+        color: #000;
+        font-family: $font;
+        font-size: 24px;
+        line-height: 24px;
+    }
+    
+    &-down {
+        width: 400px;
+        height: 40px;
+        padding: 0px 20px;
+        border-radius: 6px;
+        border: 2px solid $orange;
+        // justify-content: space-between;
+        // align-items: center;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+    &-up {
+        color: #000;
+        font-family: $font;
+        font-size: 24px;
+        line-height: 24px;
+    }
+
+    &-down {
+        width: 1200px;
+        height: 300px;
+        padding: 0px 20px;
+        border-radius: 6px;
+        border: 2px solid $orange;
+    }
+  }
+
+  &__button {
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 200px;
+    background-color: $orange;
+    border: none;
+    border-radius: 6px;
+
+    &-up {
+        color: #fff;
+        font-family: $font;
+        font-size: 28px;
+    }
+
+    &-down {
+        width: 35px;
+        height: 35px;
+    }
+  }
+}
