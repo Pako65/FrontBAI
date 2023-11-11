@@ -24,7 +24,9 @@
             </p>
         </div>
         <div>
+            <div class="separator"></div>
             <button class="auth__login" v-if="user" @click="logout">Se déconnecter</button>
+            <div class="separator"></div>
         </div>
     </div>
     <section>
@@ -230,7 +232,7 @@ export default {
             }
         },
         formatDate(createdAt: string) {
-            return moment(createdAt).format("DD/MM/YYYY");
+            return moment(createdAt).format("DD/MM");
         }
     },
     computed: {

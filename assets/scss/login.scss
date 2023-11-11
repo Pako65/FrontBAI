@@ -63,6 +63,12 @@
         font-size: 20px;
         font-style: normal;
         box-sizing: border-box;
+        @media screen and (max-width: 820px) {
+            width: 500px;
+        }
+        @media screen and (max-width: 550px) {
+            width: 300px;
+        }
     }
 
     &__sign {

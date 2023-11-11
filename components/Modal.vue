@@ -80,6 +80,7 @@ export default {
         },
         selectedFiltrer(sortType) {
             this.$emit('sort-ideas', sortType)
+            this.closeModal();
         },
         openModal() {
             this.showModal = true;
