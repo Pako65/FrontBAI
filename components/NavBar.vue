@@ -20,7 +20,7 @@
       </NuxtLink>
       <NuxtLink to="/" class="navigation__idea" v-else>
         <button class="navigation__add">
-          <p class="navigation__p">Liste des biens</p>
+          <p class="navigation__p">Liste des idées</p>
           <img alt="navigation__logoHome" src="@/assets/images/icon-liste.png" />
         </button>
       </NuxtLink>

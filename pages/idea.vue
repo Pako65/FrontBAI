@@ -26,7 +26,7 @@
                             <div class="list__image-like">
                                 <img v-if="getIsLiked(ideas.ideaId)" src="@/assets/images/coeur-plein.png"
                                     alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId, userDataId)">
-                                <img v-else src="@/assets/images/coeur-vide.png" alt="Coeur 2"
+                                <img v-else src="@/assets/images/coeur-vide.png" alt="aimer une idée"
                                     @click="addLikes(ideas.ideaId, userDataId)">
                                 <p class="list__image-total">{{ ideas.totalLikes }}</p>
                             </div>
@@ -194,7 +194,7 @@ export default {
                 if (result.isConfirmed) {
                     axios.delete(`https://localhost:7182/Idea/${ideaId}/DeleteIdeaById`).then(() => {
                         Swal.fire("Supprimé !", "Votre idée a bien été supprimée.", "success").then(() => {
-                            location.reload();
+                            this.fetchIdea();
                         });
                     }).catch((error) => {
                         console.error("Une erreur est survenue lors de la suppression", error);
