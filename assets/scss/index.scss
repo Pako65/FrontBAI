@@ -13,7 +13,6 @@
     font-style: normal;
     font-weight: 800;
     line-height: 24px;
-    /* 85.714% */
   }
   &__date {
     color: #000;
@@ -109,5 +108,37 @@
     padding: 7px 0px;
     align-items: center;
     gap: 20px;
+  }
+}
+
+.auth {
+  display: flex;
+  justify-content: center;
+  gap: 48rem;
+  align-items: center;
+  margin: 0 0 40px 0;
+
+  &__hello {
+    color: #000;
+    font-family: "Nunito";
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 24px;
+  }
+  &__login {
+    color: #fff;
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    background: #bf8c4f;
+    width: 12rem;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 24px;
+    font-family: $font;
   }
 }

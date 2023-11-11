@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navigation">
-      <NuxtLink to="/idea" class="navigation__home">
+      <NuxtLink to="/" class="navigation__home">
         <div class="navigation__logo">
           <img alt="Logo Boite a Idees" src="@/assets/images/logo.png" class="navigation__img" />
           <div class="navigation__title">
