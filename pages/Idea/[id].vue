@@ -182,5 +182,5 @@ export default {
 </script>
 
 <style>
-@import '@/assets/scss/detailedidea.scss';
+@import '@/assets/scss/detailedIdea.scss';
 </style>
