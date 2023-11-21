@@ -252,6 +252,8 @@ definePageMeta({
 const user = useSupabaseUser();
 const router = useRouter();
 const client = useSupabaseClient();
+console.log(user);
+
 
 const route = useRoute()
 

@@ -5,12 +5,13 @@
       <div class="add__container">
         <div class="add__title">
           <label for="text" class="add__title-up">Titre</label>
-          <input class="add__title-down" type="text" placeholder="Ex : Mettre une piscine pour les beaux jours :)" v-model="title" required>
+          <input class="add__title-down" type="text" placeholder="Ex : Mettre une piscine pour les beaux jours :)"
+            v-model="title" required>
         </div>
 
         <div class="add__category">
           <label for="text" class="add__category-up">Catégorie</label>
-          <select v-model="selectedCategory" class="add__category-down"  required>
+          <select v-model="selectedCategory" class="add__category-down" required>
             <option class="add__category-default" value="" disabled selected>Sélectionnez une catégorie</option>
             <option v-for="categorie in category" :value="categorie.id" :key="categorie.id">
               {{ categorie.name }}
@@ -46,13 +47,13 @@ export default {
       contenu: "",
       showButton: false,
       userEmail: '',
-      userId: null, 
+      userId: null,
     };
   },
   async mounted() {
     if (process.client) {
       this.userEmail = localStorage.getItem("userEmail");
-      this.userId = localStorage.getItem("userId"); 
+      this.userId = localStorage.getItem("userId");
     }
 
     await this.fetchCategorie();
@@ -65,20 +66,31 @@ export default {
       }
     },
     createIdea() {
+      const jwt = localStorage.getItem('jwt');
+
+      console.log('token', jwt);
+
       const ideaData = {
         title: this.title,
         description: this.contenu,
-        fkUsersId: this.userId,
-        // fkUsersId: 1, 
+        fkUsersId: "57CE874A-FDC8-4747-88B5-102E06E18A7B",
         ideaGetCategory: [
           {
             categoryId: parseInt(this.selectedCategory),
           },
         ],
         ownerEmail: this.userEmail,
+        authorizationToken: jwt, // Ajout du JWT dans les données de l'idée
       };
 
-      axios.post("https://localhost:7182/Idea/PostIdea", ideaData)
+      console.log('ideaData with JWT:', ideaData); // Ajout du console.log pour vérifier le JWT dans ideaData
+
+      axios.post("https://localhost:7182/Idea/PostIdea", ideaData, {
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        }
+      })
         .then(() => {
           Swal.fire({
             title: "Bravo !",
@@ -97,6 +109,7 @@ export default {
           });
         });
     },
+
     async fetchCategorie() {
       const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
       this.category = response.data;
@@ -109,7 +122,7 @@ export default {
 
         for (const user of this.getUsers) {
           if (user.email === userEmail) {
-            this.userId = user.id; 
+            this.userId = user.id;
             break;
           }
         }
