@@ -67,23 +67,19 @@ export default {
     },
     createIdea() {
       const jwt = localStorage.getItem('jwt');
-
-      console.log('token', jwt);
-
       const ideaData = {
         title: this.title,
         description: this.contenu,
-        fkUsersId: "57CE874A-FDC8-4747-88B5-102E06E18A7B",
+        fkUsersId: "FCD00522-6082-464E-8B82-F2160584A36C",
         ideaGetCategory: [
           {
             categoryId: parseInt(this.selectedCategory),
           },
         ],
         ownerEmail: this.userEmail,
-        authorizationToken: jwt, // Ajout du JWT dans les données de l'idée
       };
 
-      console.log('ideaData with JWT:', ideaData); // Ajout du console.log pour vérifier le JWT dans ideaData
+      console.log('ideaData with JWT:', ideaData);
 
       axios.post("https://localhost:7182/Idea/PostIdea", ideaData, {
         headers: {
@@ -111,7 +107,13 @@ export default {
     },
 
     async fetchCategorie() {
-      const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
+      const jwt = localStorage.getItem('jwt')
+      const response = await axios.get('https://localhost:7182/Category/GetAllCategory', {
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        }
+      });
       this.category = response.data;
     },
     async fetchUsers() {

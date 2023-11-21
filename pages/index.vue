@@ -130,7 +130,13 @@ export default {
             }
         },
         addLikes(ideaId: number, userDataId: string) {
-            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`)
+            const jwt = localStorage.getItem('jwt')
+            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            })
                 .then((response) => {
                     this.fetchUserLikes(userDataId);
                     this.fetchIdea();
@@ -224,7 +230,13 @@ export default {
         },
         async fetchIdea() {
             try {
-                const response = await axios.get('https://localhost:7182/Idea/GetAll');
+                const jwt = localStorage.getItem('jwt');
+                const response = await axios.get('https://localhost:7182/Idea/GetAll', {
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
                 this.idea = response.data;
 
             } catch (error) {
