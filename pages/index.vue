@@ -54,9 +54,9 @@
                         </div>
                         <div class="list__image-like">
                             <img v-if="getIsLiked(ideas.ideaId)" src="@/assets/images/coeur-plein.png"
-                                alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId, userDataId)">
+                                alt="ne pas aimer une idée" @click="removedLikes(ideas.ideaId, userId)">
                             <img v-else src="@/assets/images/coeur-vide.png" alt="aimer une idée"
-                                @click="addLikes(ideas.ideaId, userDataId)">
+                                @click="addLikes(ideas.ideaId, userId)">
                             <p class="list__image-total">{{ ideas.totalLikes }}</p>
                         </div>
 
@@ -80,6 +80,7 @@ import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { useSSRContext } from 'vue';
 
 export default {
     data() {
@@ -94,6 +95,12 @@ export default {
                 isLiked: false;
                 totalLikes: number;
             }[],
+            users: [] as {
+                id: string;
+                email: string;
+                password: string;
+                admin: number;
+            }[],
             likesByIdea: {} as Record<number, number[]>,
             likes: [],
             total: [],
@@ -103,18 +110,21 @@ export default {
             ownerEmail: '',
             userEmail: localStorage.getItem('userEmail') || '',
             isLiked: false,
+            getUsers: [],
             userLikes: [] as number[],
-            userDataId: localStorage.getItem('userId') || '',
+            // userDataId: this.user?.id;
+            userId: '',
         };
     },
     mounted() {
         if (process.client) {
-            const userEmail = localStorage.getItem('userEmail');
-            const userDataId = localStorage.getItem('userId');
+            // Utilisez this.userEmail et this.userId au lieu de const
+            // this.userEmail = localStorage.getItem('userEmail');
+            // this.userId = localStorage.getItem('userId');
         }
         this.loadUserLikes();
         this.fetchIdea();
-        // this.fetchUsers();
+        this.fetchUsers();
     },
     components: {
         Modal,
@@ -122,35 +132,38 @@ export default {
     methods: {
         loadUserLikes() {
             try {
-                if (this.userDataId) {
-                    this.fetchUserLikes(this.userDataId);
+                if (this.userId) {
+                    this.fetchUserLikes(this.userId);
                 }
             } catch (error) {
                 console.error("Erreur lors du chargement des likes")
             }
         },
-        addLikes(ideaId: number, userDataId: string) {
-            const jwt = localStorage.getItem('jwt')
-            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userDataId}&ideaId=${ideaId}`, {
+        addLikes(ideaId: number, userId: string) {
+            axios.post(`https://localhost:7182/Likes/PostNewLikes?userId=${userId}&ideaId=${ideaId}`, null, {
                 headers: {
-                    'Authorization': `Bearer ${jwt}`,
+                    'Authorization': `Bearer ${this.jwt}`,
                     'Content-Type': 'application/json',
                 }
             })
                 .then((response) => {
-                    this.fetchUserLikes(userDataId);
+                    this.fetchUserLikes(userId);
                     this.fetchIdea();
-
                     return response.data;
                 })
                 .catch(error => {
                     console.error("Error lors de l'ajout de like", error);
                 });
         },
-        removedLikes(ideaId: number, userDataId: string) {
-            axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=${userDataId}&ideaId=${ideaId}`)
+        removedLikes(ideaId: number, userId: string) {
+            axios.delete(`https://localhost:7182/Likes/DeleteLikesById?userId=${userId}&ideaId=${ideaId}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            })
                 .then(response => {
-                    this.fetchUserLikes(userDataId);
+                    this.fetchUserLikes(this.userId);
                     this.fetchIdea();
                     return response.data
                 }).catch(error => {
@@ -161,10 +174,16 @@ export default {
 
             return this.userLikes.includes(ideaId);
         },
-        fetchUserLikes(userDataId: string) {
-            axios.get(`https://localhost:7182/Likes/GetUserLikes?userId=${userDataId}`)
+        fetchUserLikes(userId: string) {
+            axios.get(`https://localhost:7182/Likes/GetUserLikes?userId=${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            })
                 .then(response => {
                     this.userLikes = response.data;
+                    console.log(this.userLikes)
                 })
                 .catch(error => {
                     console.error("Erreur lors de la récupération des likes de l'utilisateur", error);
@@ -216,7 +235,12 @@ export default {
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`https://localhost:7182/Idea/${ideaId}/DeleteIdeaById`).then(() => {
+                    axios.delete(`https://localhost:7182/Idea/${ideaId}/DeleteIdeaById`, {
+                        headers: {
+                            'Authorization': `Bearer ${this.jwt}`,
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(() => {
                         Swal.fire("Supprimé !", "Votre idée a bien été supprimée.", "success").then(() => {
                             this.fetchIdea();
                         });
@@ -230,27 +254,50 @@ export default {
         },
         async fetchIdea() {
             try {
-                const jwt = localStorage.getItem('jwt');
                 const response = await axios.get('https://localhost:7182/Idea/GetAll', {
                     headers: {
-                        'Authorization': `Bearer ${jwt}`,
+                        'Authorization': `Bearer ${this.jwt}`,
                         'Content-Type': 'application/json',
                     }
                 });
                 this.idea = response.data;
-
             } catch (error) {
                 console.error("Une erreur est survenue lors de la récupération des idées", error);
             }
         },
+        async fetchUsers() {
+            try {
+                const response = await axios.get('https://localhost:7182/Users/GetAllUsers', {
+                    headers: {
+                        'Authorization': `Bearer ${this.jwt}`,
+                        'Content-type': 'application/json',
+                    }
+                });
+                this.users = response.data;
+
+                for (const user of this.users) {
+                    if (user.email === this.userEmail) {
+                        this.userId = user.id;
+                        break;
+                    }
+                }
+                console.log(this.userId)
+            } catch (error) {
+                console.error("une erreur fetch users index", error)
+            }
+        },
         formatDate(createdAt: string) {
             return moment(createdAt).format("DD/MM");
-        }
+        },
+
     },
     computed: {
         activeSortButtonExists(): boolean {
             return this.activeSortButton !== null;
         },
+        jwt() {
+            return localStorage.getItem('jwt')
+        }
     },
 
 }
@@ -258,25 +305,25 @@ export default {
 
 <script setup lang="ts">
 
+const user = useSupabaseUser();
+
+console.log(user)
+
+
 definePageMeta({
     middleware: ['not-auth']
-})
-const user = useSupabaseUser();
+});
+
 const router = useRouter();
 const client = useSupabaseClient();
-console.log(user);
-
-
-const route = useRoute()
+const route = useRoute();
 
 async function logout() {
     await client.auth.signOut();
-
     router.push('/login');
 }
-
-
 </script>
+
 
 
 <style scoped>

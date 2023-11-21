@@ -65,18 +65,16 @@ export default {
     props: {
         show: Boolean
     },
-    mounted() {
-        this.fetchCategorie();
+    computed: {
+        jwt() {
+            return localStorage.getItem('jwt');
+        }
     },
     methods: {
         handleCategory() {
             if (this.selectedCategory === '') {
                 this.selectedCategory = '';
             }
-        },
-        async fetchCategorie() {
-            const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
-            this.category = response.data;
         },
         selectedFiltrer(sortType) {
             this.$emit('sort-ideas', sortType)

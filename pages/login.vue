@@ -32,6 +32,7 @@
 definePageMeta({
   middleware: ['auth']
 })
+const user = useSupabaseUser();
 const client = useSupabaseClient();
 const router = useRouter();
 
@@ -49,18 +50,12 @@ const signIn = async () => {
   } else {
     const jwt = client.realtime.accessToken;
     localStorage.setItem('userEmail', email.value)
+
     console.log(client)
     if (jwt !== null) {
       localStorage.setItem('jwt', jwt)
     } else {
       console.error('Le jeton d\'accès est nul.');
-    }
-
-    //méthode frauduleuse
-    if (email.value == 'nico.carbo@orange.fr') {
-      localStorage.setItem('userId', '1')
-    } else {
-      localStorage.setItem('userId', '2')
     }
     router.push('/')
   }

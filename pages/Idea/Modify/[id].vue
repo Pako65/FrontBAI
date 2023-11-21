@@ -51,6 +51,11 @@ export default {
             selectedCategory: null,
         };
     },
+    computed: {
+        jwt() {
+            return localStorage.getItem('jwt')
+        }
+    },
     methods: {
         updateSelectedCategory() {
             const selectedCategoryName = this.form.categoryName;
@@ -65,14 +70,18 @@ export default {
             const ideaData = {
                 title: this.form.title,
                 description: this.form.description,
-                fkUsersId: 1, //remplacer par this.userId donc aller chercher la variable userId
+                fkUsersId: this.userId, //remplacer par this.userId donc aller chercher la variable userId
                 ideaGetCategory: [{
                     categoryId: this.selectedCategoryId, // remplacer la variable par l'id de la catégorie
                 }]
             };
-            console.log(ideaData);
             const ideaId = this.$route.params.id
-            axios.put(`https://localhost:7182/Idea/${ideaId}/PutIdea`, ideaData)
+            axios.put(`https://localhost:7182/Idea/${ideaId}/PutIdea`, ideaData, {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            })
                 .then(() => {
                     Swal.fire("Idée modifiée", "", "success", "Ok");
                 }).catch((error) => {
@@ -81,7 +90,12 @@ export default {
                 })
         },
         async fetchCategorie() {
-            const response = await axios.get('https://localhost:7182/Category/GetAllCategory');
+            const response = await axios.get('https://localhost:7182/Category/GetAllCategory', {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             this.category = response.data;
         },
     },
@@ -89,9 +103,13 @@ export default {
         this.fetchCategorie();
         try {
             const ideaId = this.$route.params.id
-            const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`);
+            const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`, {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             this.idea = response.data[0]
-            console.log(this.idea)
             this.$nextTick(() => {
                 this.form.title = this.idea.title
                 this.form.description = this.idea.description
@@ -102,11 +120,29 @@ export default {
             console.error('Error loading data', error);
         }
     },
-    // async created() {
-    //     const response = await axios.get(`https://localhost:7182/Category/GetAllCategory`);
-    //     this.category = response.data;
-    //     console.log(this.category)
-    // },
+    async fetchUsers() {
+        try {
+            const response = await axios.get('https://localhost:7182/Users/GetAllUsers', {
+                headers: {
+                    'Authorization': `Bearer ${this.jwt}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            this.getUsers = response.data;
+            const userEmail = localStorage.getItem('userEmail');
+
+            for (const user of this.getUsers) {
+                if (user.email === userEmail) {
+                    this.userId = user.id;
+                    break;
+                }
+            }
+
+        } catch (error) {
+            console.error("Une erreur est survenue lors de la récupération des utilisateurs", error);
+        }
+    },
+
 };
 </script>
 

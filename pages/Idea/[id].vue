@@ -89,94 +89,129 @@ export default {
       console.log(this.userId)
     }
   },
-  methods: {
-    removedComment(commentId) {
-      axios.delete(`https://localhost:7182/Comments/${commentId}/DeleteComments`)
-      .then(response => {
-        const ideaId = this.$route.params.id;
-        const commentResponse = axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
-        this.comment = commentResponse.data;
-        Swal.fire("Commentaire supprimé", "", "success");
-        return response.data
-      }).catch(error => {
-        console.error("ah bah non", error)
-      })
-  },
-  toggleEditing(commentId) {
-    this.editingCommentId = (this.editingCommentId === commentId) ? null : commentId;
-  },
-  formatDate(createdAt) {
-    return moment(createdAt).format("DD/MM/YYYY")
-  },
-  submitForm(commentId) {
-    const modifyData = {
-      text: this.text,
-      userId: this.userId,
-      ideaId: this.ideaId,
-    };
-    console.log(this.commentId)
-
-    axios.put(`https://localhost:7182/Comments/${commentId}/ModifyComments`, modifyData)
-      .then(() => {
-        Swal.fire("Commentaire modifié", "", "success");
-        this.editingCommentId = null;
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire("Erreur ! ", "", "error");
-      });
-  },
-  async createComment() {
-    const commentData = {
-      text: this.text,
-      userId: this.userId,
-      ideaId: this.$route.params.id,
-    };
-    console.log(this.userId);
-    try {
-      await axios.post(`https://localhost:7182/Comments/CreateNewComments`, commentData);
-
-      const ideaId = this.$route.params.id;
-      const commentResponse = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
-      this.comment = commentResponse.data;
-
-      Swal.fire({
-        title: "Bravo !",
-        text: "Votre commentaire a bien été envoyé",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-
-      this.text = "";
-      this.addingComment = false;
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Erreur !",
-        text: "Une erreur est survenue pendant l'envoi de votre commentaire.",
-        confirmButtonText: "OK",
-      });
+  computed: {
+    jwt() {
+      return localStorage.getItem('jwt');
     }
   },
-},
+  methods: {
+    removedComment(commentId) {
+      axios.delete(`https://localhost:7182/Comments/${commentId}/DeleteComments`, {
+        headers: {
+          'Authorization': `Bearer ${this.jwt}`,
+          'Content-Type': 'application/json',
+        }
+      })
+        .then(response => {
+          const ideaId = this.$route.params.id;
+          const commentResponse = axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
+          this.comment = commentResponse.data;
+          Swal.fire("Commentaire supprimé", "", "success");
+          return response.data
+        }).catch(error => {
+          console.error("ah bah non", error)
+        })
+    },
+    toggleEditing(commentId) {
+      this.editingCommentId = (this.editingCommentId === commentId) ? null : commentId;
+    },
+    formatDate(createdAt) {
+      return moment(createdAt).format("DD/MM/YYYY")
+    },
+    submitForm(commentId) {
+      const modifyData = {
+        text: this.text,
+        userId: this.userId,
+        ideaId: this.ideaId,
+      };
+      console.log(this.commentId)
+
+      axios.put(`https://localhost:7182/Comments/${commentId}/ModifyComments`, modifyData, {
+        headers: {
+          'Authorization': `Bearer ${this.jwt}`,
+          'Content-Type': 'application/json',
+        }
+      })
+        .then(() => {
+          Swal.fire("Commentaire modifié", "", "success");
+          this.editingCommentId = null;
+        })
+        .catch((error) => {
+          console.error(error);
+          Swal.fire("Erreur ! ", "", "error");
+        });
+    },
+    async createComment() {
+      const commentData = {
+        text: this.text,
+        userId: this.userId,
+        ideaId: this.$route.params.id,
+      };
+      console.log(this.userId);
+      try {
+        await axios.post(`https://localhost:7182/Comments/CreateNewComments`, commentData, {
+          headers: {
+            'Authorization': `Bearer ${this.jwt}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const ideaId = this.$route.params.id;
+        const commentResponse = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`, {
+          headers: {
+            'Authorization': `Bearer ${this.jwt}`,
+            'Content-Type': 'application/json',
+          }
+        });
+        this.comment = commentResponse.data;
+
+        Swal.fire({
+          title: "Bravo !",
+          text: "Votre commentaire a bien été envoyé",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+
+        this.text = "";
+        this.addingComment = false;
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: "Erreur !",
+          text: "Une erreur est survenue pendant l'envoi de votre commentaire.",
+          confirmButtonText: "OK",
+        });
+      }
+    },
+  },
   async created() {
-  const ideaId = this.$route.params.id;
-  //fetch idea
-  try {
-    const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`);
-    this.idea = response.data;
-  } catch (error) {
-    console.error("erreur pendant le fetch de l'idée", error);
+    const ideaId = this.$route.params.id;
+    //fetch idea
+    try {
+      const response = await axios.get(`https://localhost:7182/Idea/${ideaId}/getIdeaById`, {
+        headers: {
+          'Authorization': `Bearer ${this.jwt}`,
+          'Content-Type': 'application/json',
+        }
+      });
+      this.idea = response.data;
+    } catch (error) {
+      console.error("erreur pendant le fetch de l'idée", error);
+    }
+    //fetch comment
+    try {
+      const response = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`, {
+        headers: {
+          'Authorization': `Bearer ${this.jwt}`,
+          'Content-Type': 'application/json',
+        }
+      });
+      this.comment = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      console.log(response.data);
+    } catch (error) {
+      console.error("error fetch comment", error);
+    }
   }
-  //fetch comment
-  try {
-    const response = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
-    this.comment = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    console.log(response.data);
-  } catch (error) {
-    console.error("error fetch comment", error);
-  }
-}
 }
 
 </script>

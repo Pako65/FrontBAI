@@ -53,11 +53,16 @@ export default {
   async mounted() {
     if (process.client) {
       this.userEmail = localStorage.getItem("userEmail");
-      this.userId = localStorage.getItem("userId");
+      // this.userId = localStorage.getItem('sb-qepocfqsqemebssjyqhb-auth-token');
     }
 
     await this.fetchCategorie();
     await this.fetchUsers();
+  },
+  computed: {
+    jwt() {
+      return localStorage.getItem('jwt')
+    }
   },
   methods: {
     handleCategory() {
@@ -66,11 +71,10 @@ export default {
       }
     },
     createIdea() {
-      const jwt = localStorage.getItem('jwt');
       const ideaData = {
         title: this.title,
         description: this.contenu,
-        fkUsersId: "FCD00522-6082-464E-8B82-F2160584A36C",
+        fkUsersId:  this.userId,
         ideaGetCategory: [
           {
             categoryId: parseInt(this.selectedCategory),
@@ -83,7 +87,7 @@ export default {
 
       axios.post("https://localhost:7182/Idea/PostIdea", ideaData, {
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          'Authorization': `Bearer ${this.jwt}`,
           'Content-Type': 'application/json',
         }
       })
@@ -107,10 +111,9 @@ export default {
     },
 
     async fetchCategorie() {
-      const jwt = localStorage.getItem('jwt')
       const response = await axios.get('https://localhost:7182/Category/GetAllCategory', {
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          'Authorization': `Bearer ${this.jwt}`,
           'Content-Type': 'application/json',
         }
       });
@@ -118,7 +121,12 @@ export default {
     },
     async fetchUsers() {
       try {
-        const response = await axios.get('https://localhost:7182/Users/GetAllUsers');
+        const response = await axios.get('https://localhost:7182/Users/GetAllUsers', {
+          headers: {
+          'Authorization': `Bearer ${this.jwt}`,
+          'Content-Type': 'application/json',
+        }
+        });
         this.getUsers = response.data;
         const userEmail = localStorage.getItem('userEmail');
 
