@@ -78,16 +78,16 @@ export default {
       addingComment: false,
       editingCommentId: null,
       text: "",
-      userId: '',
+      userId: null,
       commentId: '',
     };
   },
   async mounted() {
     if (process.client) {
       this.userEmail = localStorage.getItem("userEmail");
-      this.userId = localStorage.getItem("userId");
-      console.log(this.userId)
+      // this.userId = localStorage.getItem("userId");
     }
+    await this.fetchUsers();
   },
   computed: {
     jwt() {
@@ -95,23 +95,31 @@ export default {
     }
   },
   methods: {
-    removedComment(commentId) {
-      axios.delete(`https://localhost:7182/Comments/${commentId}/DeleteComments`, {
-        headers: {
-          'Authorization': `Bearer ${this.jwt}`,
-          'Content-Type': 'application/json',
-        }
-      })
-        .then(response => {
-          const ideaId = this.$route.params.id;
-          const commentResponse = axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`);
-          this.comment = commentResponse.data;
-          Swal.fire("Commentaire supprimé", "", "success");
-          return response.data
-        }).catch(error => {
-          console.error("ah bah non", error)
-        })
+    async removedComment(commentId) {
+      try {
+        // fetch delete comment
+        const response = await axios.delete(`https://localhost:7182/Comments/${commentId}/DeleteComments`, {
+          headers: {
+            'Authorization': `Bearer ${this.jwt}`,
+            'Content-Type': 'application/json',
+          }
+        });
+        const ideaId = this.$route.params.id;
+        //fetch print comment after delete a comment
+        const commentResponse = await axios.get(`https://localhost:7182/Comments/${ideaId}/GetByIdeaId`, {
+          headers: {
+            'Authorization': `Bearer ${this.jwt}`,
+            'Content-Type': 'application/json',
+          }
+        });
+        this.comment = commentResponse.data;
+        Swal.fire("Commentaire supprimé", "", "success");
+        return response.data;
+      } catch (err) {
+        Swal.fire("Erreur ! ", "", "error");
+      }
     },
+
     toggleEditing(commentId) {
       this.editingCommentId = (this.editingCommentId === commentId) ? null : commentId;
     },
@@ -124,8 +132,6 @@ export default {
         userId: this.userId,
         ideaId: this.ideaId,
       };
-      console.log(this.commentId)
-
       axios.put(`https://localhost:7182/Comments/${commentId}/ModifyComments`, modifyData, {
         headers: {
           'Authorization': `Bearer ${this.jwt}`,
@@ -147,7 +153,7 @@ export default {
         userId: this.userId,
         ideaId: this.$route.params.id,
       };
-      console.log(this.userId);
+      console.log('user from comment', this.userId)
       try {
         await axios.post(`https://localhost:7182/Comments/CreateNewComments`, commentData, {
           headers: {
@@ -183,6 +189,29 @@ export default {
         });
       }
     },
+    async fetchUsers() {
+      try {
+        const response = await axios.get('https://localhost:7182/Users/GetAllUsers', {
+          headers: {
+            'Authorization': `Bearer ${this.jwt}`,
+            'Content-Type': 'application/json',
+          }
+        });
+        this.getUsers = response.data;
+        const userEmail = localStorage.getItem('userEmail');
+
+        for (const user of this.getUsers) {
+          if (user.email === userEmail) {
+            this.userId = user.id;
+            console.log('user from fetch user', this.userId);
+            break;
+          }
+        }
+
+      } catch (error) {
+        console.error("Une erreur est survenue lors de la récupération des utilisateurs", error);
+      }
+    },
   },
   async created() {
     const ideaId = this.$route.params.id;
@@ -207,7 +236,6 @@ export default {
         }
       });
       this.comment = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      console.log(response.data);
     } catch (error) {
       console.error("error fetch comment", error);
     }

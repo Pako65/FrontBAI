@@ -1,14 +1,3 @@
-<!-- <template>
-    <h1>index</h1>
-
-    <NuxtLink to="/idea">
-        <button style="height: 20px;">PAGE IDEA</button>
-    </NuxtLink>
-    <NuxtLink to="/idea/add">
-        <button style="height: 20px;">PAGE add idea</button>
-    </NuxtLink>
-</template> -->
-
 <template>
     <div>
         <form @submit.prevent></form>
@@ -183,7 +172,6 @@ export default {
             })
                 .then(response => {
                     this.userLikes = response.data;
-                    console.log(this.userLikes)
                 })
                 .catch(error => {
                     console.error("Erreur lors de la récupération des likes de l'utilisateur", error);
@@ -281,7 +269,6 @@ export default {
                         break;
                     }
                 }
-                console.log(this.userId)
             } catch (error) {
                 console.error("une erreur fetch users index", error)
             }
@@ -306,9 +293,6 @@ export default {
 <script setup lang="ts">
 
 const user = useSupabaseUser();
-
-console.log(user)
-
 
 definePageMeta({
     middleware: ['not-auth']

@@ -83,7 +83,6 @@ export default {
         ownerEmail: this.userEmail,
       };
 
-      console.log('ideaData with JWT:', ideaData);
 
       axios.post("https://localhost:7182/Idea/PostIdea", ideaData, {
         headers: {
