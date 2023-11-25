@@ -100,8 +100,7 @@ export default {
             userEmail: localStorage.getItem('userEmail') || '',
             isLiked: false,
             getUsers: [],
-            userLikes: [] as number[],
-            // userDataId: this.user?.id;
+            userLikes: JSON.parse(localStorage.getItem('userLikes')) || [],
             userId: '',
         };
     },
@@ -138,6 +137,8 @@ export default {
                 .then((response) => {
                     this.fetchUserLikes(userId);
                     this.fetchIdea();
+                    this.userLikes.push(ideaId);
+                    localStorage.setItem('userLikes', JSON.stringify(this.userLikes));
                     return response.data;
                 })
                 .catch(error => {
@@ -154,6 +155,8 @@ export default {
                 .then(response => {
                     this.fetchUserLikes(this.userId);
                     this.fetchIdea();
+                    this.userLikes = this.userLikes.filter(id => id !== ideaId);
+                    localStorage.setItem('userLikes', JSON.stringify(this.userLikes));
                     return response.data
                 }).catch(error => {
                     console.error("Erreur lors de la suppression du like", error)
