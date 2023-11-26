@@ -153,7 +153,6 @@ export default {
         userId: this.userId,
         ideaId: this.$route.params.id,
       };
-      console.log('user from comment', this.userId)
       try {
         await axios.post(`https://localhost:7182/Comments/CreateNewComments`, commentData, {
           headers: {
@@ -203,7 +202,6 @@ export default {
         for (const user of this.getUsers) {
           if (user.email === userEmail) {
             this.userId = user.id;
-            console.log('user from fetch user', this.userId);
             break;
           }
         }
