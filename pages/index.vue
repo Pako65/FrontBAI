@@ -65,7 +65,6 @@
 <script lang="ts">
 //regarder pour faire une requete test avec postman
 
-import Modal from '@/components/Modal.vue';
 import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -100,7 +99,7 @@ export default {
             userEmail: localStorage.getItem('userEmail') || '',
             isLiked: false,
             getUsers: [],
-            userLikes: JSON.parse(localStorage.getItem('userLikes')) || [],
+            userLikes: JSON.parse(localStorage.getItem('userLikes') as string) || [],
             userId: '',
         };
     },
@@ -114,17 +113,14 @@ export default {
         this.fetchIdea();
         this.fetchUsers();
     },
-    components: {
-        Modal,
-    },
     methods: {
-        loadUserLikes() {
+        async loadUserLikes() {
             try {
                 if (this.userId) {
                     this.fetchUserLikes(this.userId);
                 }
             } catch (error) {
-                console.error("Erreur lors du chargement des likes")
+                console.error("Erreur lors du chargement des likes", error);
             }
         },
         addLikes(ideaId: number, userId: string) {
@@ -155,7 +151,7 @@ export default {
                 .then(response => {
                     this.fetchUserLikes(this.userId);
                     this.fetchIdea();
-                    this.userLikes = this.userLikes.filter(id => id !== ideaId);
+                    this.userLikes = this.userLikes.filter((id: number) => id !== ideaId);
                     localStorage.setItem('userLikes', JSON.stringify(this.userLikes));
                     return response.data
                 }).catch(error => {
@@ -166,19 +162,24 @@ export default {
 
             return this.userLikes.includes(ideaId);
         },
-        fetchUserLikes(userId: string) {
-            axios.get(`https://localhost:7182/Likes/GetUserLikes?userId=${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${this.jwt}`,
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then(response => {
-                    this.userLikes = response.data;
-                })
-                .catch(error => {
-                    console.error("Erreur lors de la récupération des likes de l'utilisateur", error);
+        async fetchUserLikes(userId: string) {
+            try {
+                const response = await axios.get(`https://localhost:7182/Likes/GetUserLikes?userId=${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.jwt}`,
+                        'Content-Type': 'application/json',
+                    }
                 });
+                this.userLikes = response.data;
+                localStorage.setItem('userLikes', JSON.stringify(this.userLikes));
+
+                this.idea = this.idea.map((idea) => ({
+                    ...idea,
+                    isLiked: this.userLikes.includes(idea.ideaId),
+                }));
+            } catch (error) {
+                console.error("Erreur lors de la récupération des likes de l'utilisateur", error);
+            }
         },
         shortText(description: String, maxLength: number) {
             if (description.length <= maxLength) {
@@ -269,11 +270,12 @@ export default {
                 for (const user of this.users) {
                     if (user.email === this.userEmail) {
                         this.userId = user.id;
+                        this.loadUserLikes();
                         break;
                     }
                 }
             } catch (error) {
-                console.error("une erreur fetch users index", error)
+                console.error("une erreur fetch users index", error);
             }
         },
         formatDate(createdAt: string) {

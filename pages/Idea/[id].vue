@@ -39,10 +39,10 @@
 
         <div class="detailedIdea__icon">
 
-          <img v-if="editingCommentId !== comments.id" src="@/assets/images/icon-modifier-black.png"
+          <img class="detailedIdea__icon-modifie" v-if="editingCommentId !== comments.id" src="@/assets/images/icon-modifier-black.png"
             alt="modifier un commentaire" @click="toggleEditing(comments.id)">
 
-          <img v-if="editingCommentId !== comments.id" src="@/assets/images/icon-delete.png"
+          <img class="detailedIdea__icon-delete" v-if="editingCommentId !== comments.id" src="@/assets/images/icon-delete.png"
             alt="supprimer un commentaire" @click="removedComment(comments.id)">
 
           <button v-else @click="submitForm(comments.id)">Modifier</button>

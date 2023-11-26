@@ -94,6 +94,12 @@
     align-items: flex-end;
     padding: 0 10px 10px 0;
     gap: 10px;
+    &-modifie {
+      cursor: pointer;
+    }
+    &-delete {
+      cursor: pointer;
+    }
   }
   &__button {
     display: flex;
