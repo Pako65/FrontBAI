@@ -49,7 +49,6 @@ const signIn = async () => {
     errorMsg.value;
   } else {
     const jwt = client.realtime.accessToken;
-    console.log(jwt)
     localStorage.setItem('userEmail', email.value)
 
     if (jwt !== null) {
